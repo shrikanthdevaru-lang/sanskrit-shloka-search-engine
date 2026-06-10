@@ -1711,5 +1711,913 @@ function updateTotalCount() {
   setTimeout(step, 800);
 }
 </script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     VEDANTA AI AGENT — Floating Chat Panel
+══════════════════════════════════════════════════════════════ -->
+<style>
+/* ─── AGENT FAB ─── */
+#agent-fab {
+  position: fixed; bottom: 28px; right: 28px; z-index: 500;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #8b3a10 0%, #d4a03c 50%, #e8851a 100%);
+  border: none; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(212,160,60,0.45), 0 0 0 0 rgba(212,160,60,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: fabPulse 3s ease-in-out infinite;
+}
+#agent-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 40px rgba(212,160,60,0.6);
+}
+@keyframes fabPulse {
+  0%,100% { box-shadow: 0 6px 24px rgba(212,160,60,0.45), 0 0 0 0 rgba(212,160,60,0.3); }
+  50%      { box-shadow: 0 6px 24px rgba(212,160,60,0.45), 0 0 0 12px rgba(212,160,60,0); }
+}
+.fab-badge {
+  position: absolute; top: -4px; right: -4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #e84040; border: 2px solid var(--void);
+  font-size: 9px; font-weight: 700;
+  font-family: 'Space Mono', monospace;
+  color: white; display: flex; align-items: center; justify-content: center;
+}
+
+/* ─── AGENT PANEL ─── */
+#agent-panel {
+  position: fixed; bottom: 100px; right: 28px; z-index: 500;
+  width: min(400px, calc(100vw - 32px));
+  height: min(580px, calc(100vh - 130px));
+  background: rgba(6,6,15,0.97);
+  border: 1px solid rgba(212,160,60,0.3);
+  border-radius: 24px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(212,160,60,0.06);
+  backdrop-filter: blur(32px);
+  transform: scale(0.85) translateY(30px);
+  opacity: 0; pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+}
+#agent-panel.open {
+  transform: scale(1) translateY(0);
+  opacity: 1; pointer-events: all;
+}
+
+/* Panel header */
+.agent-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(212,160,60,0.12);
+  background: rgba(12,8,2,0.6);
+  flex-shrink: 0;
+}
+.agent-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, #4a1a00, #d4a03c);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 20px; color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(212,160,60,0.3);
+  position: relative;
+}
+.agent-avatar::after {
+  content: '';
+  position: absolute; bottom: 1px; right: 1px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #3cd46e; border: 2px solid rgba(6,6,15,0.97);
+}
+.agent-info { flex: 1; }
+.agent-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--t1); line-height: 1;
+  margin-bottom: 2px;
+}
+.agent-status {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.1em;
+  color: #3cd46e; text-transform: uppercase;
+}
+.agent-close {
+  background: transparent; border: none; cursor: pointer;
+  color: var(--t3); font-size: 18px;
+  transition: color 0.2s; padding: 4px 8px;
+}
+.agent-close:hover { color: var(--t1); }
+
+/* Capability chips */
+.agent-caps {
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 10px 16px 10px;
+  border-bottom: 1px solid rgba(212,160,60,0.08);
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+.agent-caps::-webkit-scrollbar { display: none; }
+.cap-chip {
+  flex-shrink: 0;
+  padding: 5px 12px; border-radius: 100px;
+  border: 1px solid rgba(212,160,60,0.2);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.08em;
+  color: var(--t3); cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.cap-chip:hover {
+  border-color: rgba(212,160,60,0.5);
+  color: var(--gold); background: rgba(212,160,60,0.06);
+}
+
+/* Messages area */
+.agent-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  scrollbar-width: thin; scrollbar-color: rgba(212,160,60,0.2) transparent;
+}
+.agent-messages::-webkit-scrollbar { width: 3px; }
+.agent-messages::-webkit-scrollbar-thumb { background: rgba(212,160,60,0.2); border-radius: 3px; }
+
+/* Message bubbles */
+.msg {
+  display: flex; gap: 8px; align-items: flex-end;
+  animation: msgIn 0.3s ease both;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.msg.user { flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  flex-shrink: 0; overflow: hidden;
+  background: rgba(212,160,60,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.msg.bot .msg-avatar {
+  background: linear-gradient(135deg, #4a1a00, #d4a03c);
+  font-family: 'Noto Sans Devanagari', serif; color: white;
+}
+
+.msg-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; line-height: 1.6;
+}
+.msg.bot .msg-bubble {
+  background: rgba(20,14,4,0.9);
+  border: 1px solid rgba(212,160,60,0.15);
+  border-bottom-left-radius: 4px;
+  color: var(--t1);
+}
+.msg.user .msg-bubble {
+  background: linear-gradient(135deg, rgba(140,90,10,0.5), rgba(212,160,60,0.2));
+  border: 1px solid rgba(212,160,60,0.25);
+  border-bottom-right-radius: 4px;
+  color: var(--t1);
+}
+
+/* Shloka card inside chat */
+.chat-shloka {
+  background: rgba(6,6,15,0.9);
+  border: 1px solid rgba(212,160,60,0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 8px;
+}
+.chat-shloka-text {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 14px; line-height: 1.8;
+  color: var(--t1); margin-bottom: 6px;
+}
+.chat-shloka-iast {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px; font-style: italic;
+  color: var(--gold); opacity: 0.7;
+  margin-bottom: 6px;
+}
+.chat-shloka-trans {
+  font-size: 12px; color: var(--t2); line-height: 1.5;
+}
+.chat-shloka-src {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--t3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid rgba(212,160,60,0.1);
+}
+.chat-shloka-actions {
+  display: flex; gap: 6px; margin-top: 8px;
+}
+.chat-action {
+  padding: 4px 10px; border-radius: 8px;
+  border: 1px solid rgba(212,160,60,0.2);
+  background: transparent; cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.06em;
+  color: var(--t3); transition: all 0.2s;
+}
+.chat-action:hover { border-color: rgba(212,160,60,0.5); color: var(--gold); }
+
+/* Typing indicator */
+.typing-bubble .msg-bubble {
+  padding: 12px 16px;
+}
+.typing-dots {
+  display: flex; gap: 4px; align-items: center;
+}
+.typing-dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); opacity: 0.4;
+  animation: typingDot 1.2s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingDot {
+  0%,60%,100% { opacity: 0.4; transform: translateY(0); }
+  30%          { opacity: 1;   transform: translateY(-4px); }
+}
+
+/* Quick-reply buttons */
+.quick-replies {
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 0 4px;
+}
+.quick-reply {
+  padding: 6px 12px; border-radius: 100px;
+  border: 1px solid rgba(212,160,60,0.25);
+  background: transparent; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: var(--t2);
+  transition: all 0.2s;
+}
+.quick-reply:hover { border-color: var(--gold); color: var(--gold); background: rgba(212,160,60,0.05); }
+
+/* Input area */
+.agent-input-wrap {
+  display: flex; gap: 8px; align-items: flex-end;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(212,160,60,0.1);
+  background: rgba(4,4,10,0.8);
+  flex-shrink: 0;
+}
+.agent-input {
+  flex: 1;
+  background: rgba(12,12,28,0.8);
+  border: 1px solid rgba(212,160,60,0.15);
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  color: var(--t1); resize: none; outline: none;
+  max-height: 90px; min-height: 40px;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+}
+.agent-input::placeholder { color: var(--t3); }
+.agent-input:focus { border-color: rgba(212,160,60,0.4); }
+.agent-send {
+  width: 38px; height: 38px; flex-shrink: 0;
+  border-radius: 12px; border: none;
+  background: linear-gradient(135deg, #c89030, #e8a828);
+  color: #0a0800; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: 700;
+}
+.agent-send:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(212,160,60,0.4); }
+
+/* Agent intro card */
+.agent-intro {
+  text-align: center; padding: 12px 4px 4px;
+}
+.agent-intro-om {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 32px; color: var(--gold);
+  opacity: 0.7; display: block; margin-bottom: 6px;
+}
+.agent-intro-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600; color: var(--t1);
+  margin-bottom: 4px;
+}
+.agent-intro-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; color: var(--t3); line-height: 1.5;
+}
+</style>
+
+<!-- FAB Button -->
+<button id="agent-fab" onclick="toggleAgent()" title="Ask Vedanta AI">
+  <span>🕉️</span>
+  <span class="fab-badge">AI</span>
+</button>
+
+<!-- Agent Panel -->
+<div id="agent-panel" role="dialog" aria-label="Vedanta AI Agent">
+  <!-- Header -->
+  <div class="agent-header">
+    <div class="agent-avatar">ॐ</div>
+    <div class="agent-info">
+      <div class="agent-name">Vedanta AI</div>
+      <div class="agent-status">● Online · Sanskrit Guide</div>
+    </div>
+    <button class="agent-close" onclick="toggleAgent()" aria-label="Close agent">✕</button>
+  </div>
+
+  <!-- Capability chips -->
+  <div class="agent-caps">
+    <button class="cap-chip" onclick="sendQuick('Find me a shloka about peace')">🕊️ Peace</button>
+    <button class="cap-chip" onclick="sendQuick('Shloka about karma')">⚖️ Karma</button>
+    <button class="cap-chip" onclick="sendQuick('I am feeling sad, help me')">💙 Sad?</button>
+    <button class="cap-chip" onclick="sendQuick('Explain Bhagavad Gita')">📖 Gita</button>
+    <button class="cap-chip" onclick="sendQuick('What is dharma?')">🌿 Dharma</button>
+    <button class="cap-chip" onclick="sendQuick('Random shloka please')">🎲 Random</button>
+    <button class="cap-chip" onclick="sendQuick('Shloka for motivation')">🔥 Motivate</button>
+    <button class="cap-chip" onclick="sendQuick('What are the Upanishads?')">📚 Upanishads</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="agent-messages" id="agentMessages">
+    <!-- Intro message injected by JS -->
+  </div>
+
+  <!-- Input -->
+  <div class="agent-input-wrap">
+    <textarea
+      class="agent-input"
+      id="agentInput"
+      placeholder="Ask anything about Sanskrit, shlokas, Vedic wisdom…"
+      rows="1"
+      onkeydown="handleAgentKey(event)"
+      oninput="autoResize(this)"
+    ></textarea>
+    <button class="agent-send" onclick="sendAgentMessage()" title="Send">↑</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   VEDANTA AI AGENT ENGINE
+══════════════════════════════════════════════════════════════ */
+
+let agentOpen = false;
+
+function toggleAgent() {
+  agentOpen = !agentOpen;
+  document.getElementById('agent-panel').classList.toggle('open', agentOpen);
+  if (agentOpen && document.getElementById('agentMessages').children.length === 0) {
+    initAgentConversation();
+  }
+}
+
+function initAgentConversation() {
+  addBotMessage(`
+    <div class="agent-intro">
+      <span class="agent-intro-om">ॐ</span>
+      <div class="agent-intro-title">Namaste 🙏 I am Vedanta AI</div>
+      <div class="agent-intro-sub">Your guide to Sanskrit shlokas and ancient wisdom. I can find shlokas by topic, explain their meaning, recommend verses for life situations, and teach you about Sanskrit scriptures.</div>
+    </div>
+  `);
+  setTimeout(() => {
+    addBotMessage(`What would you like to explore today?`, [
+      'Find a shloka about peace',
+      'I need motivation',
+      'Explain what Karma means',
+      'Tell me about Bhagavad Gita',
+      'Random shloka',
+    ]);
+  }, 600);
+}
+
+/* ─── INTENT DETECTION ─── */
+const INTENTS = [
+  {
+    name: 'greeting',
+    patterns: [/^(hi|hello|namaste|jai|hey|hola|good|namas)/i, /^(ram ram|hari om|om|ॐ)/i],
+    handler: () => greetUser()
+  },
+  {
+    name: 'feeling_sad',
+    patterns: [/sad|unhappy|depress|grief|loss|cry|sorrow|heartbroken|lonely|alone|hopeless|despair|numb|empty|broken/i],
+    handler: () => respondToEmotion('sad')
+  },
+  {
+    name: 'feeling_anxious',
+    patterns: [/anxi|stress|worry|scared|fear|tension|nervous|panic|overwhelm|pressure/i],
+    handler: () => respondToEmotion('anxious')
+  },
+  {
+    name: 'feeling_angry',
+    patterns: [/angry|anger|furious|rage|frustrat|irritat|mad|upset|क्रोध/i],
+    handler: () => respondToEmotion('angry')
+  },
+  {
+    name: 'need_motivation',
+    patterns: [/motivat|inspire|courage|strength|lazy|procrastinat|give up|quit|tired|weak|stuck|help me/i],
+    handler: () => respondToEmotion('motivation')
+  },
+  {
+    name: 'random_shloka',
+    patterns: [/random|surprise|any shloka|give me a shloka|show me a shloka|shloka please/i],
+    handler: () => giveRandomShloka()
+  },
+  {
+    name: 'daily_shloka',
+    patterns: [/today|daily|of the day|today.s/i],
+    handler: () => giveDailyShloka()
+  },
+  {
+    name: 'explain_karma',
+    patterns: [/what is karma|explain karma|karma mean|about karma|कर्म/i],
+    handler: () => explainConcept('karma')
+  },
+  {
+    name: 'explain_dharma',
+    patterns: [/what is dharma|explain dharma|dharma mean|about dharma|धर्म/i],
+    handler: () => explainConcept('dharma')
+  },
+  {
+    name: 'explain_moksha',
+    patterns: [/what is moksha|explain moksha|moksha mean|liberation|mukti|मोक्ष/i],
+    handler: () => explainConcept('moksha')
+  },
+  {
+    name: 'explain_atman',
+    patterns: [/what is atman|atman mean|soul|self|आत्मा|spirit/i],
+    handler: () => explainConcept('atman')
+  },
+  {
+    name: 'explain_brahman',
+    patterns: [/what is brahman|brahman mean|cosmic|absolute|ब्रह्म/i],
+    handler: () => explainConcept('brahman')
+  },
+  {
+    name: 'explain_yoga',
+    patterns: [/what is yoga|explain yoga|yoga mean|about yoga|योग/i],
+    handler: () => explainConcept('yoga')
+  },
+  {
+    name: 'about_gita',
+    patterns: [/bhagavad gita|gita|about gita|what is gita|explain gita|गीता/i],
+    handler: () => explainScripture('gita')
+  },
+  {
+    name: 'about_ramayana',
+    patterns: [/ramayana|about ramayana|what is ramayana|रामायण/i],
+    handler: () => explainScripture('ramayana')
+  },
+  {
+    name: 'about_mahabharata',
+    patterns: [/mahabharata|mahabharat|about mahabharata|महाभारत/i],
+    handler: () => explainScripture('mahabharata')
+  },
+  {
+    name: 'about_upanishads',
+    patterns: [/upanishad|what are upanishads|about upanishads|उपनिषद/i],
+    handler: () => explainScripture('upanishads')
+  },
+  {
+    name: 'about_vedas',
+    patterns: [/veda|rig veda|vedas|what are vedas|about vedas|वेद/i],
+    handler: () => explainScripture('vedas')
+  },
+  {
+    name: 'find_shloka',
+    patterns: [/find|search|show|give|shloka about|verse about|mantra about|related to|on the topic/i],
+    handler: (q) => findShlokaForQuery(q)
+  },
+  {
+    name: 'meaning',
+    patterns: [/meaning|translate|what does|interpret|explain this/i],
+    handler: (q) => explainShloka(q)
+  },
+  {
+    name: 'chanakya',
+    patterns: [/chanakya|kautilya|arthashastra|niti/i],
+    handler: () => explainScripture('chanakya')
+  },
+];
+
+/* ─── CONCEPT EXPLANATIONS ─── */
+const CONCEPTS = {
+  karma: {
+    title: 'Karma (कर्म)',
+    body: `**Karma** literally means "action" in Sanskrit. It is one of the most profound concepts in Hindu philosophy.\n\n🔹 **What it means:** Every action you take creates an equal and opposite reaction — not necessarily immediately, but inevitably across lifetimes.\n\n🔹 **Three types of Karma:**\n• **Sanchita** — accumulated past karma\n• **Prarabdha** — karma ripening now (your current life)\n• **Agami** — karma you're creating right now\n\n🔹 **Key insight:** The Bhagavad Gita says it's not the action but the *intention and attachment* that creates karma. Acting without attachment to results (Nishkama Karma) does not bind the soul.`,
+    shlokaId: 1, // karmanya evadhikaras te
+  },
+  dharma: {
+    title: 'Dharma (धर्म)',
+    body: `**Dharma** comes from the Sanskrit root *dhṛ* — "to hold together, to sustain." It is often translated as duty, righteousness, or cosmic order.\n\n🔹 **Levels of Dharma:**\n• **Sanatana Dharma** — the eternal, universal law\n• **Varna Dharma** — duty based on one's nature and role\n• **Ashrama Dharma** — duty based on stage of life\n• **Svadharma** — your own personal, unique duty\n\n🔹 **Key insight:** Krishna tells Arjuna that following your own dharma imperfectly is better than following another's dharma perfectly. (*Swadharme nidhanam shreyah*)\n\n🔹 **Dharma holds the universe together** — it is the invisible order that keeps cosmos, society, and the individual in harmony.`,
+    shlokaId: 5, // yada yada hi dharmasya
+  },
+  moksha: {
+    title: 'Moksha / Liberation (मोक्ष)',
+    body: `**Moksha** means liberation, freedom, or release — the ultimate goal of human life in Vedantic philosophy.\n\n🔹 **What it means:** Freedom from the endless cycle of birth, death, and rebirth (samsara). The realization that the individual self (Atman) is identical with the universal consciousness (Brahman).\n\n🔹 **Paths to Moksha (4 Yogas):**\n• **Jnana Yoga** — path of knowledge and wisdom\n• **Bhakti Yoga** — path of devotion and love\n• **Karma Yoga** — path of selfless action\n• **Raja Yoga** — path of meditation and discipline\n\n🔹 **Key insight:** Moksha is not a place you go to, but a *state of being* — the recognition of your true, eternal nature.`,
+    shlokaId: 8, // sarva dharman parityajya
+  },
+  atman: {
+    title: 'Atman / The Self (आत्मा)',
+    body: `**Atman** is the Sanskrit word for the individual Self or soul — the eternal, unchanging essence within every being.\n\n🔹 **What the Upanishads say:**\n• Atman is not the body, mind, or ego\n• It is pure consciousness — the witness of all experience\n• It is unborn, undying, and beyond change\n• "*Aham Brahmasmi*" — I am Brahman (the cosmic Self)\n\n🔹 **Atman vs. Brahman:** The greatest insight of Advaita Vedanta is that Atman (individual self) = Brahman (universal consciousness). The apparent separation is Maya (illusion).\n\n🔹 **Key insight:** The Katha Upanishad says the Atman is "smaller than the smallest, greater than the greatest" — it cannot be perceived by the senses but only realized through deep meditation.`,
+    shlokaId: 3, // na jayate mriyate
+  },
+  brahman: {
+    title: 'Brahman (ब्रह्म)',
+    body: `**Brahman** is the ultimate, absolute reality in Hindu philosophy — the infinite, eternal, unchanging cosmic consciousness from which everything arises.\n\n🔹 **Key qualities:** *Sat* (existence), *Chit* (consciousness), *Ananda* (bliss) — Sachchidananda.\n\n🔹 **Three views:**\n• **Advaita (Non-dual):** Brahman alone is real; all else is Maya\n• **Vishishtadvaita:** Brahman is real, world and souls are real but part of Brahman\n• **Dvaita:** Brahman and souls are eternally distinct\n\n🔹 **The four Mahavakyas (great sayings) about Brahman:**\n• *Tat tvam asi* — That art thou (Chandogya)\n• *Aham Brahmasmi* — I am Brahman (Brihadaranyaka)\n• *Prajnanam Brahma* — Consciousness is Brahman (Aitareya)\n• *Sarvam khalvidam Brahma* — All this is Brahman (Chandogya)`,
+    shlokaId: 200,
+  },
+  yoga: {
+    title: 'Yoga (योग)',
+    body: `**Yoga** means "union" in Sanskrit — union of the individual self with the universal consciousness. It is far more than physical postures.\n\n🔹 **The 8 Limbs of Yoga (Patanjali's Ashtanga):**\n1. Yama — ethical restraints\n2. Niyama — personal observances\n3. Asana — postures\n4. Pranayama — breath control\n5. Pratyahara — sense withdrawal\n6. Dharana — concentration\n7. Dhyana — meditation\n8. Samadhi — absorption/enlightenment\n\n🔹 **4 Paths of Yoga:**\n• **Jnana Yoga** — the yoga of knowledge\n• **Bhakti Yoga** — the yoga of devotion\n• **Karma Yoga** — the yoga of action\n• **Raja Yoga** — the yoga of meditation\n\n🔹 **Patanjali's definition:** *"Yogaś citta-vṛtti-nirodhaḥ"* — Yoga is the cessation of the movements of the mind.`,
+    shlokaId: 500,
+  },
+};
+
+/* ─── SCRIPTURE EXPLANATIONS ─── */
+const SCRIPTURES = {
+  gita: {
+    title: 'Bhagavad Gita (भगवद्गीता)',
+    body: `The **Bhagavad Gita** ("Song of God") is a 700-verse Hindu scripture embedded in the epic Mahabharata. It is a conversation between Prince Arjuna and Lord Krishna on the battlefield of Kurukshetra.\n\n📖 **Structure:** 18 chapters, 700 verses\n\n📖 **Three core teachings:**\n1. **Karma Yoga** — Do your duty without attachment to results\n2. **Jnana Yoga** — Knowledge of the Self (Atman = Brahman)\n3. **Bhakti Yoga** — Devotion and surrender to God\n\n📖 **Why it matters:** Called the "essence of all Vedic knowledge," the Gita addresses the most fundamental questions of human existence — Who am I? What is my duty? What happens after death? How do I live a meaningful life?\n\n📖 **Famous teachers who commented on it:** Adi Shankaracharya, Ramanuja, Madhva, Bal Gangadhar Tilak, Swami Vivekananda, Mahatma Gandhi.`,
+    filter: 'gita',
+    shlokaId: 1,
+  },
+  ramayana: {
+    title: 'Valmiki Ramayana (रामायण)',
+    body: `The **Ramayana** ("Journey of Rama") is one of the two great Sanskrit epics of ancient India, composed by the sage Valmiki around 500 BCE. It has 24,000 verses across 7 books (Kandas).\n\n📖 **The story:** Prince Rama is exiled for 14 years. His wife Sita is abducted by the demon king Ravana. Rama, aided by Hanuman and the monkey army, rescues Sita and defeats Ravana.\n\n📖 **Core values:** Dharma (righteousness), truth, loyalty, devotion, courage, and the ideal human being (*Maryada Purushottama*).\n\n📖 **7 Books:** Bala Kanda, Ayodhya Kanda, Aranya Kanda, Kishkindha Kanda, Sundara Kanda, Yuddha Kanda, Uttara Kanda.\n\n📖 **Cultural impact:** Translated into 300+ languages. Inspires art, dance, drama, and daily life across South and Southeast Asia.`,
+    filter: 'ramayana',
+    shlokaId: 51,
+  },
+  mahabharata: {
+    title: 'Mahabharata (महाभारत)',
+    body: `The **Mahabharata** is the longest epic poem in the world — nearly 100,000 verses, 10x the length of the Iliad and Odyssey combined. Composed by Vyasa around 400 BCE.\n\n📖 **The story:** The great war between the Pandavas and Kauravas for the throne of Hastinapura. The Bhagavad Gita is embedded within it.\n\n📖 **"Jaya" — Victory:** The original title was "Jaya," emphasizing that dharma ultimately triumphs.\n\n📖 **18 Parvas (books):** Adi, Sabha, Vana, Virata, Udyoga, Bhishma, Drona, Karna, Shalya, Sauptika, Stri, Shanti, Anushasana, Ashvamedhika, Ashramavasika, Mausala, Mahaprasthanika, Svargarohana.\n\n📖 **Key quote:** *"What is not here is nowhere. What is here may be found elsewhere."*`,
+    filter: 'mahabharata',
+    shlokaId: 100,
+  },
+  upanishads: {
+    title: 'Upanishads (उपनिषद)',
+    body: `The **Upanishads** are the philosophical heart of the Vedas — 108 texts exploring the ultimate nature of reality, consciousness, and the Self.\n\n📖 **The name:** *Upanishad* = "sitting down near" — the intimate transmission of wisdom from guru to disciple.\n\n📖 **Major Upanishads (the "Dasopanishads"):**\nIsha, Kena, Katha, Prashna, Mundaka, Mandukya, Taittiriya, Aitareya, Chandogya, Brihadaranyaka.\n\n📖 **Core teachings:**\n• Brahman is the only reality\n• Atman = Brahman (Mahavakyas)\n• The world is Maya (illusion/appearance)\n• Liberation = direct knowledge of the Self\n\n📖 **Influence:** Shaped Buddhism, Jainism, Sikhism. Schopenhauer called them "the most profitable and elevating reading possible in the world."`,
+    filter: 'upanishad',
+    shlokaId: 200,
+  },
+  vedas: {
+    title: 'Vedas (वेद)',
+    body: `The **Vedas** are the oldest scriptures in the world — eternal divine knowledge (*Shruti*, "that which is heard") composed around 1500–1200 BCE and earlier.\n\n📖 **Four Vedas:**\n• **Rig Veda** — 1,028 hymns of praise (the oldest)\n• **Sama Veda** — melodies and chants derived from Rig Veda\n• **Yajur Veda** — ritual formulas for sacrifice\n• **Atharva Veda** — spells, medicine, philosophy\n\n📖 **Structure of each Veda:**\n• **Samhitas** — hymns and mantras\n• **Brahmanas** — ritual instructions\n• **Aranyakas** — forest meditations\n• **Upanishads** — philosophical essence\n\n📖 **Language:** Vedic Sanskrit — the most ancient form of the language, the "mother" of all Indo-European languages.\n\n📖 **GRETIL** (Göttingen Register) is the primary digital archive of Sanskrit Vedic texts today.`,
+    filter: 'vedas',
+    shlokaId: 300,
+  },
+  chanakya: {
+    title: 'Chanakya Niti (चाणक्य नीति)',
+    body: `**Chanakya** (also known as Kautilya or Vishnugupta, ~350–283 BCE) was an ancient Indian teacher, philosopher, economist, and royal advisor.\n\n📖 **Chanakya Niti** is his collection of maxims and aphorisms on politics, economics, ethics, and everyday wisdom — often called India's "Art of War" or "The Prince."\n\n📖 **His works:**\n• **Arthashastra** — the science of statecraft and economics\n• **Chanakya Niti** — maxims for wise living\n• **Nitishastra** — ethical governance\n\n📖 **Famous quotes:**\n• *"A person should not be too honest. Straight trees are cut first."*\n• *"Once you start working on something, don't be afraid of failure."*\n• *"Education is the best friend."*\n\n📖 **Legacy:** He tutored Chandragupta Maurya and helped establish the Maurya Empire. His wisdom remains remarkably relevant 2300 years later.`,
+    filter: 'chanakya',
+    shlokaId: 400,
+  },
+};
+
+/* ─── EMOTION → SHLOKA MAPPING ─── */
+const EMOTION_MAP = {
+  sad: {
+    intro: `I understand you're going through a difficult time. 🙏 The ancient sages spoke profoundly about the impermanence of sorrow. Here are shlokas that bring comfort:`,
+    keywords: ['sorrow', 'peace', 'soul', 'eternal', 'light'],
+    ids: [11, 201, 3, 252],
+    followup: [`Here is wisdom from the Gita for your heart. Remember — *"This too shall pass." Pain is temporary; the soul is eternal.*`]
+  },
+  anxious: {
+    intro: `Worry and anxiety have troubled humanity since ancient times. The Vedic sages understood this well. Let their wisdom be your anchor:`,
+    keywords: ['peace', 'surrender', 'mind', 'control', 'trust'],
+    ids: [8, 7, 302, 10],
+    followup: [`The Gita's greatest teaching for anxiety: surrender the fruit of action to God. Do your best; release the rest. *"Yogah karmasu kaushalam"* — Yoga is excellence in action.`]
+  },
+  angry: {
+    intro: `Anger (krodha) is described in the Bhagavad Gita as one of the gateways to self-destruction. Here is ancient wisdom to cool the fire within:`,
+    keywords: ['anger', 'mind', 'control', 'peace', 'wisdom'],
+    ids: [601, 10, 9, 302],
+    followup: [`The Gita teaches: anger arises from frustrated desire. Desire arises from attachment. By reducing attachment, anger dissolves naturally.`]
+  },
+  motivation: {
+    intro: `The Vedic tradition has some of the most powerful motivational wisdom ever written. Rise, awaken, and do not stop until you reach your goal:`,
+    keywords: ['effort', 'courage', 'karma', 'action', 'strength'],
+    ids: [1, 404, 54, 102],
+    followup: [`Remember: *"Uttishtha! Jagratha! Prapya Varan Nibodhata"* — Arise! Awake! Stop not till the goal is reached! (Katha Upanishad)`]
+  },
+};
+
+/* ─── MAIN RESPONSE ROUTER ─── */
+function processUserMessage(text) {
+  const lower = text.toLowerCase().trim();
+
+  // Match intents in priority order
+  for (const intent of INTENTS) {
+    if (intent.patterns.some(p => p.test(lower))) {
+      return intent.handler(text);
+    }
+  }
+
+  // Fallback: try to search shlokas
+  const results = searchShlokas(text);
+  if (results.length > 0) {
+    return findShlokaForQuery(text);
+  }
+
+  // Generic fallback
+  addBotMessage(`I'm not sure I fully understand. Let me suggest some ways I can help:`, [
+    'Find a shloka about peace',
+    'Explain what Karma means',
+    'I need motivation today',
+    'Tell me about Bhagavad Gita',
+    'Give me a random shloka',
+  ]);
+}
+
+/* ─── RESPONSE HANDLERS ─── */
+function greetUser() {
+  const greetings = [
+    `🙏 *Namaste!* Welcome, dear seeker. The ancient wisdom of Sanskrit shlokas awaits you. What would you like to explore?`,
+    `🕉️ *Jai Shri Ram!* I am here to guide you through the ocean of Sanskrit wisdom. What calls to your heart today?`,
+    `🙏 *Om Namah Shivaya!* Blessed are those who seek wisdom. How may I serve you today?`,
+  ];
+  addBotMessage(greetings[Math.floor(Math.random() * greetings.length)], [
+    'Find a shloka for me',
+    'Explain Karma',
+    'What is Dharma?',
+    'Random shloka',
+  ]);
+}
+
+function respondToEmotion(emotion) {
+  const data = EMOTION_MAP[emotion];
+  addBotMessage(data.intro);
+
+  setTimeout(() => {
+    // Show 2 relevant shlokas
+    const targetIds = data.ids.slice(0, 2);
+    targetIds.forEach((id, i) => {
+      setTimeout(() => {
+        const s = SHLOKAS.find(s => s.id === id);
+        if (s) addShlokaCard(s);
+      }, i * 700);
+    });
+
+    setTimeout(() => {
+      addBotMessage(data.followup[0], ['Show me more', 'Find by topic', 'Thank you 🙏']);
+    }, targetIds.length * 700 + 400);
+  }, 400);
+}
+
+function giveRandomShloka() {
+  const s = SHLOKAS[Math.floor(Math.random() * SHLOKAS.length)];
+  addBotMessage(`Here is a shloka from **${s.scripture}** (${s.ref}):`);
+  setTimeout(() => {
+    addShlokaCard(s);
+    setTimeout(() => {
+      addBotMessage(`Would you like to explore more?`, ['Another random shloka', 'Explain this shloka', 'Find by topic']);
+    }, 500);
+  }, 400);
+}
+
+function giveDailyShloka() {
+  const s = SHLOKAS[dailyIndex];
+  addBotMessage(`🌅 Today's featured shloka is from **${s.scripture}** (${s.ref}):`);
+  setTimeout(() => {
+    addShlokaCard(s);
+    setTimeout(() => {
+      addBotMessage(`This is today's daily shloka. Would you like to explore more wisdom?`, [
+        'More from this scripture',
+        'Different topic',
+        'Find by keyword',
+      ]);
+    }, 500);
+  }, 400);
+}
+
+function explainConcept(concept) {
+  const data = CONCEPTS[concept];
+  if (!data) { findShlokaForQuery(concept); return; }
+
+  // Format markdown-like text
+  const formatted = data.body
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--gold-light)">$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em style="color:var(--t2)">$1</em>')
+    .replace(/\n/g, '<br>')
+    .replace(/🔹/g, '<span style="color:var(--gold)">🔹</span>');
+
+  addBotMessage(`<strong style="color:var(--gold-light);font-size:14px">📚 ${data.title}</strong><br><br>${formatted}`);
+
+  if (data.shlokaId) {
+    const s = SHLOKAS.find(s => s.id === data.shlokaId);
+    if (s) {
+      setTimeout(() => {
+        addBotMessage(`Here is a classic shloka on this topic:`);
+        setTimeout(() => addShlokaCard(s), 300);
+      }, 600);
+    }
+  }
+
+  setTimeout(() => {
+    addBotMessage(`What else would you like to explore?`, [
+      `More ${concept} shlokas`,
+      'Explain another concept',
+      'Tell me about Bhagavad Gita',
+    ]);
+  }, 1600);
+}
+
+function explainScripture(scripture) {
+  const data = SCRIPTURES[scripture];
+  if (!data) { findShlokaForQuery(scripture); return; }
+
+  const formatted = data.body
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--gold-light)">$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em style="color:var(--t2)">$1</em>')
+    .replace(/\n/g, '<br>')
+    .replace(/📖/g, '<span style="color:var(--gold)">📖</span>');
+
+  addBotMessage(`<strong style="color:var(--gold-light);font-size:14px">📜 ${data.title}</strong><br><br>${formatted}`);
+
+  if (data.shlokaId) {
+    const s = SHLOKAS.find(s => s.id === data.shlokaId);
+    if (s) {
+      setTimeout(() => {
+        addBotMessage(`Here is a classic opening shloka from this scripture:`);
+        setTimeout(() => addShlokaCard(s), 300);
+      }, 700);
+    }
+  }
+
+  setTimeout(() => {
+    addBotMessage(`Would you like to search shlokas from this scripture?`, [
+      `Search ${data.title.split('(')[0].trim()} shlokas`,
+      'Tell me about another scripture',
+      'Random shloka',
+    ]);
+  }, 1800);
+}
+
+function findShlokaForQuery(query) {
+  // Extract topic keyword from query
+  const stopWords = ['find', 'show', 'me', 'a', 'shloka', 'verse', 'about', 'on', 'for', 'give', 'search', 'mantra', 'related', 'to'];
+  const words = query.toLowerCase().split(/\s+/).filter(w => !stopWords.includes(w) && w.length > 2);
+  const keyword = words[0] || query;
+
+  const results = searchShlokas(keyword).slice(0, 3);
+
+  if (results.length === 0) {
+    addBotMessage(`I couldn't find shlokas specifically about "${keyword}". Let me suggest some alternatives:`, [
+      'Shlokas about peace',
+      'Shlokas about karma',
+      'Shlokas about dharma',
+      'Random shloka',
+    ]);
+    return;
+  }
+
+  addBotMessage(`Found **${results.length}** shlokas related to "*${keyword}*":`.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--gold-light)">$1</strong>').replace(/\*(.*?)\*/g, '<em style="color:var(--t2)">$1</em>'));
+
+  results.forEach((s, i) => {
+    setTimeout(() => addShlokaCard(s), i * 500 + 300);
+  });
+
+  setTimeout(() => {
+    addBotMessage(`Would you like to see all results in the main search?`, [
+      `Search "${keyword}" in full`,
+      'Different topic',
+      'Random shloka',
+    ]);
+  }, results.length * 500 + 700);
+}
+
+function explainShloka(query) {
+  // Try to find which shloka they're asking about
+  const results = searchShlokas(query).slice(0, 1);
+  if (results.length > 0) {
+    const s = results[0];
+    addBotMessage(`Here is the full shloka from **${s.scripture}** (${s.ref}):`.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--gold-light)">$1</strong>'));
+    setTimeout(() => {
+      addShlokaCard(s);
+      setTimeout(() => {
+        addBotMessage(`The translation: *"${s.translation}"*<br><br>Tags: ${s.tags.join(', ')}`.replace(/\*(.*?)\*/g, '<em style="color:var(--t2)">$1</em>'), [
+          'More from this scripture',
+          'Related shlokas',
+          'Copy this shloka',
+        ]);
+      }, 500);
+    }, 400);
+  } else {
+    findShlokaForQuery(query);
+  }
+}
+
+/* ─── UI HELPERS ─── */
+function addBotMessage(html, quickReplies = null) {
+  const msgs = document.getElementById('agentMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = `
+    <div class="msg-avatar">ॐ</div>
+    <div>
+      <div class="msg-bubble">${html}</div>
+      ${quickReplies ? `<div class="quick-replies" style="margin-top:8px">
+        ${quickReplies.map(r => `<button class="quick-reply" onclick="sendQuick('${r.replace(/'/g,"\\'")}')"><span>${r}</span></button>`).join('')}
+      </div>` : ''}
+    </div>`;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function addUserMessage(text) {
+  const msgs = document.getElementById('agentMessages');
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `
+    <div class="msg-avatar">👤</div>
+    <div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function addShlokaCard(s) {
+  const msgs = document.getElementById('agentMessages');
+  const badgeClass = `badge-${s.source}`;
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.style.animationDelay = '0.1s';
+  div.innerHTML = `
+    <div class="msg-avatar">ॐ</div>
+    <div style="max-width:85%">
+      <div class="chat-shloka">
+        <div class="chat-shloka-text">${s.sanskrit.replace(/\n/g, '<br>')}</div>
+        <div class="chat-shloka-iast">${s.iast.split('||')[0].trim()}…</div>
+        <div class="chat-shloka-trans">${s.translation.substring(0, 160)}${s.translation.length > 160 ? '…' : ''}</div>
+        <div class="chat-shloka-src">
+          <span class="source-badge ${badgeClass}" style="margin-right:6px">${s.scripture.split(' ')[0]}</span>
+          ${s.ref} · ${s.tags.join(', ')}
+        </div>
+        <div class="chat-shloka-actions">
+          <button class="chat-action" onclick="copyShloka(${s.id});showToast('Copied! 🙏')">📋 Copy</button>
+          <button class="chat-action" onclick="document.getElementById('searchInput').value='${s.tags[0]}';doSearch('${s.tags[0]}');showToast('Searching...')">🔍 View in Search</button>
+        </div>
+      </div>
+    </div>`;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function showTyping() {
+  const msgs = document.getElementById('agentMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot typing-bubble';
+  div.id = 'typingIndicator';
+  div.innerHTML = `
+    <div class="msg-avatar">ॐ</div>
+    <div class="msg-bubble">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>`;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function hideTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function scrollToBottom() {
+  const msgs = document.getElementById('agentMessages');
+  requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
+}
+
+/* ─── INPUT HANDLING ─── */
+function sendAgentMessage() {
+  const input = document.getElementById('agentInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  addUserMessage(text);
+  showTyping();
+  // Simulate thinking delay
+  const delay = 600 + Math.random() * 600;
+  setTimeout(() => { hideTyping(); processUserMessage(text); }, delay);
+}
+
+function sendQuick(text) {
+  addUserMessage(text);
+  showTyping();
+  setTimeout(() => { hideTyping(); processUserMessage(text); }, 700 + Math.random() * 400);
+}
+
+function handleAgentKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAgentMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
+}
+</script>
 </body>
 </html>
