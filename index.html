@@ -3,2176 +3,1713 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dr. Saroj Kumar Padhi — Professor of Vedānta · BHU</title>
-<meta name="description" content="Academic portfolio of Dr. Saroj Kumar Padhi, Professor of Vaidic Darshan at Banaras Hindu University, specialist in Advaita Vedānta and Contemporary Indian Philosophy.">
+<title>Sanskrit Shloka Finder — Search 1000+ Shlokas from Vedas, Gita, Ramayana & More</title>
+<meta name="description" content="Instantly find Sanskrit shlokas from Bhagavad Gita, Ramayana, Mahabharata, Upanishads, Vedas, and Puranas. Search by any word in Sanskrit, IAST or English to get the full shloka with source and translation.">
+<meta name="keywords" content="Sanskrit shloka finder, Bhagavad Gita search, Sanskrit verse search, Upanishad shlokas, Vedic texts, Mantra finder">
+<meta property="og:title" content="Sanskrit Shloka Finder">
+<meta property="og:description" content="Search thousands of Sanskrit shlokas from ancient scriptures. Find any shloka by typing a single word.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 /* ─── RESET & TOKENS ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --void:     #04040c;
-  --deep:     #080814;
-  --surface:  #0d0d1e;
-  --card-bg:  rgba(10,10,22,0.9);
-  --gold:     #d4a843;
-  --gold-dim: rgba(212,168,67,0.12);
-  --gold-glow:rgba(212,168,67,0.06);
-  --pale:     #e8d5a3;
-  --luminous: #f5edd8;
-  --t1:       #e8d9c0;
-  --t2:       #9a8a72;
-  --t3:       #5a5040;
-  --blue:     #4a7fa5;
-  --violet:   #7a5fa5;
-  --teal:     #3a8a7a;
-  --white:    #ffffff;
-  --nav-h:    72px;
-
-  /* gradient heading */
-  --heading-grad: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  --void:       #020209;
+  --deep:       #06060f;
+  --surface:    #0b0b1a;
+  --card:       rgba(12,12,28,0.92);
+  --border:     rgba(212,160,60,0.12);
+  --border-hi:  rgba(212,160,60,0.4);
+  --gold:       #d4a03c;
+  --gold-light: #f0c96a;
+  --gold-dim:   rgba(212,160,60,0.08);
+  --saffron:    #e8851a;
+  --crimson:    #8b2252;
+  --teal:       #1a7a6e;
+  --t1:         #ede0c8;
+  --t2:         #9a8872;
+  --t3:         #4a4035;
+  --white:      #ffffff;
 }
 
-html { scroll-behavior: smooth; overflow-x: hidden; }
-
+html { scroll-behavior: smooth; }
 body {
   background: var(--void);
   color: var(--t1);
-  font-family: 'Kanit', sans-serif;
-  font-weight: 300;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
   line-height: 1.6;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* scrollbar */
-::-webkit-scrollbar { width: 3px; }
+::selection { background: rgba(212,160,60,0.25); color: var(--gold-light); }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
 
-/* ─── GRADIENT TEXT ─── */
-.grad-text {
-  background: var(--heading-grad);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── PROGRESS BAR ─── */
-#progress {
-  position: fixed; top: 0; left: 0; z-index: 999;
-  height: 2px; width: 0%;
-  background: linear-gradient(90deg, #d4a843, #e8d5a3, #d4a843);
-  transition: width 0.1s linear;
-}
-
-/* ─── STARFIELD ─── */
-#starfield {
+/* ─── PARTICLES ─── */
+#particles-canvas {
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
 }
 
-/* ─── NAV ─── */
-#nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: var(--nav-h); z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 clamp(24px, 5vw, 64px);
-  transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
-}
-
-#nav.scrolled {
-  background: rgba(4,4,12,0.88);
-  backdrop-filter: blur(22px) saturate(160%);
-  box-shadow: 0 1px 0 rgba(212,168,67,0.1);
-}
-
-.nav-logo {
-  cursor: pointer;
-  display: flex; flex-direction: column; gap: 1px;
-}
-
-.nav-logo-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(16px, 2vw, 22px);
-  font-style: italic;
-  color: var(--gold);
-  line-height: 1;
-}
-
-.nav-logo-sub {
-  font-family: 'Space Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.2em;
-  color: var(--t3);
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex; gap: clamp(20px, 4vw, 48px); list-style: none;
-}
-
-.nav-links a {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(9px, 1.1vw, 12px);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--t2);
-  text-decoration: none;
-  position: relative;
-  transition: color 0.3s;
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute; bottom: -3px; left: 0; right: 0;
-  height: 1px; background: var(--gold);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform 0.35s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.nav-links a:hover { color: var(--gold); }
-.nav-links a:hover::after { transform: scaleX(1); }
-
-/* ─── MAIN WRAPPER ─── */
-.universe { position: relative; z-index: 1; overflow-x: clip; }
-
-/* ══════════════════════════════════════
-   HERO
-══════════════════════════════════════ */
+/* ─── HERO SECTION ─── */
 .hero {
   position: relative;
   min-height: 100vh;
   display: flex; flex-direction: column;
-  overflow: hidden; overflow-x: clip;
-  padding: var(--nav-h) clamp(24px,5vw,64px) 0;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+  overflow: hidden;
 }
 
-/* Mandala */
-.hero-mandala {
-  position: absolute; top: 50%; right: -5%;
-  transform: translateY(-52%);
-  width: clamp(300px,50vw,640px);
-  height: clamp(300px,50vw,640px);
-  background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Dharma_wheel.svg/800px-Dharma_wheel.svg.png') center/contain no-repeat;
-  opacity: 0.04;
-  animation: mandalaSpin 120s linear infinite;
-  pointer-events: none;
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image: url('hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.18;
+  z-index: 0;
 }
 
-/* Rings */
-.ring {
-  position: absolute; border-radius: 50%;
-  border: 1px solid rgba(212,168,67,0.07);
-  pointer-events: none; top: 50%; right: -5%;
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(212,160,60,0.08) 0%, transparent 65%),
+              radial-gradient(ellipse at 80% 80%, rgba(139,34,82,0.06) 0%, transparent 60%),
+              linear-gradient(to bottom, var(--void) 0%, transparent 30%, transparent 70%, var(--void) 100%);
+  z-index: 1;
 }
 
-.r1 { width: 520px; height: 520px; margin-top:-260px; animation: slowspin 80s linear infinite; }
-.r2 { width: 700px; height: 700px; margin-top:-350px; border-color: rgba(212,168,67,0.04); animation: slowspin 130s linear infinite reverse; }
-.r3 { width: 900px; height: 900px; margin-top:-450px; border-color: rgba(212,168,67,0.02); animation: slowspin 200s linear infinite; }
+.hero-content { position: relative; z-index: 2; max-width: 800px; }
 
-.r1::before {
-  content: ''; position: absolute;
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--gold); top: -4.5px; left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 18px var(--gold), 0 0 36px rgba(212,168,67,0.4);
+.hero-om {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: clamp(48px, 10vw, 96px);
+  color: var(--gold);
+  opacity: 0.9;
+  text-shadow: 0 0 60px rgba(212,160,60,0.5), 0 0 120px rgba(212,160,60,0.2);
+  animation: omPulse 4s ease-in-out infinite;
+  display: block; margin-bottom: 16px;
 }
 
-.r2::before {
-  content: ''; position: absolute;
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--blue); bottom: -2.5px; right: 60px;
-  box-shadow: 0 0 12px var(--blue);
-}
-
-@keyframes slowspin { to { transform: rotate(360deg); } }
-@keyframes mandalaSpin { to { transform: translateY(-52%) rotate(360deg); } }
-
-/* Hero content */
-.hero-content {
-  flex: 1; display: flex; flex-direction: column;
-  justify-content: center; gap: 0;
-  padding-bottom: 80px;
-  position: relative; z-index: 2;
+@keyframes omPulse {
+  0%, 100% { opacity: 0.85; text-shadow: 0 0 40px rgba(212,160,60,0.4), 0 0 80px rgba(212,160,60,0.15); }
+  50%       { opacity: 1;    text-shadow: 0 0 80px rgba(212,160,60,0.7), 0 0 160px rgba(212,160,60,0.3); }
 }
 
 .hero-eyebrow {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(9px,1.1vw,12px);
+  font-size: clamp(9px, 1.2vw, 11px);
   letter-spacing: 0.35em; text-transform: uppercase;
-  color: var(--gold); margin-bottom: clamp(20px,3vh,36px);
-  display: flex; align-items: center; gap: 14px;
-  opacity: 0; transform: translateY(-20px);
-  animation: fadeSlide 0.7s cubic-bezier(0.25,0.1,0.25,1) 0.05s forwards;
+  color: var(--gold); opacity: 0.7;
+  margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  animation: fadeIn 0.8s ease 0.1s both;
 }
-
-.hero-eyebrow::before {
-  content: ''; display: block; width: 32px; height: 1px;
-  background: var(--gold); opacity: 0.55;
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 40px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold));
+  opacity: 0.5;
 }
+.hero-eyebrow::after { transform: scaleX(-1); }
 
-.hero-dr {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(10px,1.2vw,14px); letter-spacing: 0.25em;
-  color: var(--gold); margin-bottom: 6px;
-  opacity: 0; transform: translateY(40px);
-  animation: fadeSlide 0.7s cubic-bezier(0.25,0.1,0.25,1) 0.15s forwards;
-}
-
-.hero-name {
-  font-family: 'Kanit', sans-serif;
-  font-size: clamp(52px,9.5vw,112px);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.025em;
-  line-height: 0.88;
-  white-space: nowrap;
-  overflow: hidden;
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0; transform: translateY(40px);
-  animation: fadeSlide 0.75s cubic-bezier(0.25,0.1,0.25,1) 0.2s forwards;
-}
-
-.hero-name-italic {
-  font-style: italic; font-weight: 300;
-  display: block;
-  background: linear-gradient(180deg, #c9b68a 0%, #e8d9c0 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-tagline {
-  margin-top: clamp(18px,2.5vh,30px);
+.hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(15px,2.2vw,24px);
+  font-size: clamp(36px, 8vw, 72px);
+  font-weight: 600;
+  line-height: 1.05;
+  background: linear-gradient(135deg, #d4a03c 0%, #f0c96a 40%, #e8d5a3 70%, #c89830 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  animation: fadeIn 0.8s ease 0.2s both;
+}
+
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 2vw, 20px);
   font-style: italic;
   color: var(--t2);
   font-weight: 300;
-  line-height: 1.4;
-  max-width: 480px;
-  opacity: 0; transform: translateY(30px);
-  animation: fadeSlide 0.7s cubic-bezier(0.25,0.1,0.25,1) 0.35s forwards;
+  margin-bottom: 48px;
+  animation: fadeIn 0.8s ease 0.3s both;
 }
 
-.hero-inst {
+/* ─── SEARCH BAR ─── */
+.search-container {
+  position: relative; width: 100%; max-width: 680px; margin: 0 auto;
+  animation: fadeIn 0.8s ease 0.4s both;
+}
+
+.search-wrap {
+  position: relative;
+  display: flex; align-items: center;
+  background: rgba(12,12,28,0.85);
+  border: 1.5px solid var(--border-hi);
+  border-radius: 20px;
+  padding: 6px 6px 6px 22px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 0 0 1px rgba(212,160,60,0.08), 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(212,160,60,0.08);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-wrap:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(212,160,60,0.1), 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(212,160,60,0.12);
+}
+
+.search-icon {
+  color: var(--gold); font-size: 20px; flex-shrink: 0;
+  opacity: 0.7; margin-right: 12px;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--t1);
+  caret-color: var(--gold);
+  padding: 10px 0;
+}
+
+.search-input::placeholder {
+  color: var(--t3);
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.5vw, 16px);
+}
+
+.search-btn {
+  flex-shrink: 0;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #c89030 0%, #e8a828 50%, #d4a03c 100%);
+  border: none; border-radius: 14px;
+  color: #0a0800;
   font-family: 'Space Mono', monospace;
-  font-size: clamp(9px,1.1vw,11px);
-  letter-spacing: 0.1em; color: var(--t3);
-  margin-top: 8px;
-  opacity: 0; transform: translateY(20px);
-  animation: fadeSlide 0.7s cubic-bezier(0.25,0.1,0.25,1) 0.42s forwards;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.search-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 20px rgba(212,160,60,0.4);
+}
+
+/* Search suggestions dropdown */
+.search-suggestions {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+  background: rgba(10,10,22,0.98);
+  border: 1px solid var(--border-hi);
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 100;
+  display: none;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+.search-suggestions.show { display: block; }
+.suggestion-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(212,160,60,0.06);
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background: rgba(212,160,60,0.06); }
+.suggestion-devanagari {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 16px; color: var(--gold-light);
+}
+.suggestion-source {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--t3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-left: auto;
+}
+
+/* ─── FILTERS ─── */
+.filters-bar {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  padding: 32px 24px 0;
+  position: relative; z-index: 2;
+  animation: fadeIn 0.8s ease 0.5s both;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--t2);
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(9px, 1vw, 11px);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--border-hi);
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.filter-btn.active {
+  border-color: var(--gold);
+  color: #0a0800;
+  background: linear-gradient(135deg, #c89030, #e8a828);
+  font-weight: 700;
 }
 
 /* Stats */
 .hero-stats {
-  display: flex; flex-wrap: wrap; gap: 0;
-  margin-top: clamp(28px,4vh,52px);
-  width: fit-content;
-  border: 1px solid rgba(212,168,67,0.14);
-  opacity: 0; transform: translateY(20px);
-  animation: fadeSlide 0.7s cubic-bezier(0.25,0.1,0.25,1) 0.5s forwards;
+  display: flex; gap: 32px; justify-content: center;
+  margin-top: 40px; flex-wrap: wrap;
+  position: relative; z-index: 2;
+  animation: fadeIn 0.8s ease 0.6s both;
 }
-
-.stat {
-  padding: clamp(10px,1.5vh,18px) clamp(18px,3vw,36px);
-  border-right: 1px solid rgba(212,168,67,0.14);
-  text-align: center; position: relative;
-}
-
-.stat:last-child { border-right: none; }
-
+.stat-item { text-align: center; }
 .stat-num {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 800;
-  font-size: clamp(28px,4vw,48px);
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  color: var(--gold-light);
   line-height: 1;
-  background: linear-gradient(180deg, #d4a843 0%, #f5edd8 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transition: transform 0.3s;
 }
-
-.stat:hover .stat-num { transform: scale(1.08); }
-
 .stat-label {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(7px,0.9vw,9px);
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--t3); margin-top: 4px;
+  font-size: 9px; letter-spacing: 0.2em;
+  color: var(--t3); text-transform: uppercase;
+  margin-top: 4px; display: block;
 }
 
-/* Contact chips */
-.hero-contact {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  margin-top: clamp(20px,3vh,36px);
-  opacity: 0; transform: translateY(20px);
-  animation: fadeSlide 0.7s cubic-bezier(0.25,0.1,0.25,1) 0.6s forwards;
+/* ─── MAIN CONTENT ─── */
+main {
+  position: relative; z-index: 1;
+  padding: 0 24px 80px;
+  max-width: 1100px; margin: 0 auto;
 }
 
-.chip {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 18px; border-radius: 100px;
-  border: 1px solid rgba(212,168,67,0.15);
+/* ─── STATUS BAR ─── */
+.status-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+  flex-wrap: wrap; gap: 12px;
+}
+.status-count {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(9px,1vw,11px); letter-spacing: 0.05em;
-  color: var(--t2); cursor: pointer;
-  transition: border-color 0.3s, color 0.3s, background 0.3s;
+  font-size: 11px; color: var(--t3);
+  letter-spacing: 0.1em;
 }
-
-.chip:hover {
-  border-color: rgba(212,168,67,0.5);
-  color: var(--gold); background: rgba(212,168,67,0.06);
-}
-
-.chip-icon { color: var(--gold); font-size: 12px; }
-
-/* Portrait */
-.hero-portrait-wrap {
-  position: absolute;
-  right: clamp(20px,6vw,80px); bottom: 0;
-  z-index: 1;
-  opacity: 0; transform: translateY(30px);
-  animation: fadeSlide 0.8s cubic-bezier(0.25,0.1,0.25,1) 0.65s forwards;
-}
-
-.hero-portrait-img {
-  width: clamp(200px,28vw,420px);
-  display: block;
-  filter: saturate(0.7) brightness(0.9);
-  transition: filter 0.5s;
-}
-
-.hero-portrait-wrap:hover .hero-portrait-img {
-  filter: saturate(1) brightness(1);
-}
-
-/* Scroll cue */
-.scroll-cue {
-  position: absolute; bottom: clamp(20px,3vh,36px); left: clamp(24px,5vw,64px);
-  display: flex; align-items: center; gap: 12px;
-  animation: bob 2.8s ease-in-out infinite;
-  z-index: 2;
-}
-
-@keyframes bob {
-  0%, 100% { opacity: 0.3; transform: translateY(0); }
-  50%       { opacity: 0.8; transform: translateY(10px); }
-}
-
-.scroll-line { width: 48px; height: 1px; background: var(--gold); opacity: 0.4; }
-.scroll-txt {
+.status-count span { color: var(--gold-light); font-weight: 700; }
+.sort-select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--t2);
   font-family: 'Space Mono', monospace;
-  font-size: 8px; letter-spacing: 0.3em; color: var(--t3); text-transform: uppercase;
+  font-size: 10px; letter-spacing: 0.08em;
+  padding: 6px 14px; border-radius: 8px;
+  outline: none; cursor: pointer;
 }
 
-@keyframes fadeSlide {
-  to { opacity: 1; transform: none; }
+/* ─── RESULTS GRID ─── */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+  gap: 20px;
 }
 
-/* ══════════════════════════════════════
-   MARQUEE SECTION
-══════════════════════════════════════ */
-.marquee-section {
-  background: var(--void);
-  padding: clamp(60px,10vh,120px) 0 clamp(30px,5vh,60px);
-  overflow: hidden; position: relative; z-index: 1;
-}
-
-.marquee-track { display: flex; gap: 16px; will-change: transform; }
-.marquee-track + .marquee-track { margin-top: 16px; }
-
-.marquee-item {
-  flex-shrink: 0;
-  width: clamp(280px,32vw,460px);
-  height: clamp(160px,18vw,280px);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(212,168,67,0.08);
-  position: relative;
-  transition: border-color 0.4s, transform 0.4s;
+/* ─── SHLOKA CARD ─── */
+.shloka-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px 28px 22px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  animation: cardIn 0.4s ease both;
 }
 
-.marquee-item:hover {
-  border-color: rgba(212,168,67,0.3);
-  transform: scale(1.03);
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.marquee-item-inner {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 24px;
-  background: var(--surface);
-  position: relative; overflow: hidden;
+.shloka-card:hover {
+  border-color: rgba(212,160,60,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,160,60,0.1);
 }
 
-/* Decorative glow inside marquee tiles */
-.marquee-item-inner::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 30% 30%, rgba(212,168,67,0.06), transparent 65%);
-  pointer-events: none;
-}
-
-.marquee-item-glyph {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(28px,4vw,52px);
-  font-style: italic;
-  background: linear-gradient(180deg, rgba(212,168,67,0.5), rgba(212,168,67,0.15));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1; margin-bottom: 12px;
-  position: relative; z-index: 1;
-}
-
-.marquee-item-title {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 600; text-transform: uppercase;
-  font-size: clamp(11px,1.4vw,15px);
-  letter-spacing: 0.12em; color: var(--t1);
-  text-align: center; position: relative; z-index: 1;
-}
-
-.marquee-item-sub {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(8px,0.9vw,10px);
-  color: var(--t3); letter-spacing: 0.1em;
-  margin-top: 4px; text-align: center; position: relative; z-index: 1;
-}
-
-/* ══════════════════════════════════════
-   SECTION GENERIC
-══════════════════════════════════════ */
-.section {
-  position: relative; z-index: 1;
-  padding: clamp(80px,12vh,140px) clamp(24px,5vw,80px);
-}
-
-.section-eyebrow {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(8px,1vw,10px);
-  letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--gold); opacity: 0.75;
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 12px;
-}
-
-.section-eyebrow::before {
-  content: ''; width: 24px; height: 1px;
-  background: var(--gold); opacity: 0.5;
-}
-
-.section-heading {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 900; text-transform: uppercase;
-  letter-spacing: -0.02em; line-height: 0.88;
-  font-size: clamp(52px,10vw,140px);
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: clamp(36px,6vh,72px);
-}
-
-/* ══════════════════════════════════════
-   ABOUT SECTION
-══════════════════════════════════════ */
-.about-section {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; position: relative; overflow: hidden;
-  padding: clamp(80px,12vh,140px) clamp(24px,5vw,80px);
-  background: var(--void);
-}
-
-/* Corner decorations */
-.about-deco {
-  position: absolute; pointer-events: none;
-  transition: opacity 0.4s, transform 0.6s;
-}
-
-.about-deco img {
-  display: block; width: 100%; height: 100%;
-  object-fit: contain; filter: drop-shadow(0 0 24px rgba(212,168,67,0.15));
-}
-
-.deco-tl {
-  top: 4%; left: 2%;
-  width: clamp(80px,14vw,200px); height: clamp(80px,14vw,200px);
-}
-
-.deco-bl {
-  bottom: 8%; left: 5%;
-  width: clamp(70px,12vw,180px); height: clamp(70px,12vw,180px);
-}
-
-.deco-tr {
-  top: 4%; right: 2%;
-  width: clamp(80px,14vw,200px); height: clamp(80px,14vw,200px);
-}
-
-.deco-br {
-  bottom: 8%; right: 5%;
-  width: clamp(80px,14vw,210px); height: clamp(80px,14vw,210px);
-}
-
-.about-inner {
-  display: flex; flex-direction: column;
-  align-items: center; gap: clamp(28px,5vh,56px);
-  max-width: 680px; position: relative; z-index: 1;
-}
-
-.about-heading {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 900; text-transform: uppercase;
-  letter-spacing: -0.02em; line-height: 0.88;
-  font-size: clamp(52px,10vw,140px);
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.about-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(17px,2vw,26px);
-  color: var(--t1); font-weight: 400;
-  line-height: 1.7; text-align: center;
-  max-width: 560px;
-}
-
-/* Character animation spans */
-.char-wrapper { display: inline; white-space: pre-wrap; }
-.char { display: inline; color: var(--t1); opacity: 0.18; will-change: opacity; }
-
-/* Contact button */
-.btn-contact {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: clamp(12px,1.5vh,16px) clamp(28px,3vw,48px);
-  border-radius: 100px;
-  background: linear-gradient(123deg, #18011F 7%, #8800a0 37%, #5a1d9e 72%, #9a3e00 100%);
-  box-shadow: 0 4px 4px rgba(181,1,167,0.2), inset 4px 4px 12px #5a1d9e;
-  outline: 2px solid rgba(255,255,255,0.1);
-  outline-offset: -3px;
-  color: #fff;
-  font-family: 'Kanit', sans-serif;
-  font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em;
-  font-size: clamp(11px,1.2vw,14px);
-  cursor: pointer; border: none;
-  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
-}
-
-.btn-contact:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 8px 24px rgba(181,1,167,0.35), inset 4px 4px 12px #5a1d9e;
-}
-
-/* ══════════════════════════════════════
-   SERVICES (WHITE BG)
-══════════════════════════════════════ */
-.services-section {
-  background: #ffffff;
-  border-radius: 50px 50px 0 0;
-  position: relative; z-index: 2;
-  padding: clamp(60px,10vh,120px) clamp(24px,5vw,80px);
-}
-
-.services-section .section-heading {
-  background: none;
-  -webkit-background-clip: unset; -webkit-text-fill-color: #0C0C0C;
-  background-clip: unset;
-  color: #0C0C0C;
-  text-align: center;
-}
-
-.services-list { max-width: 960px; margin: 0 auto; }
-
-.service-item {
-  display: flex; align-items: flex-start; gap: clamp(16px,3vw,40px);
-  padding: clamp(22px,3.5vh,44px) 0;
-  border-top: 1px solid rgba(12,12,12,0.12);
-  position: relative;
-  transition: background 0.3s;
-}
-
-.service-item:last-child { border-bottom: 1px solid rgba(12,12,12,0.12); }
-
-.service-item::before {
-  content: '';
-  position: absolute; inset: 0; left: -16px; right: -16px;
-  background: rgba(212,168,67,0.04);
-  opacity: 0;
-  transition: opacity 0.35s;
-  pointer-events: none;
-}
-
-.service-item:hover::before { opacity: 1; }
-
-.service-num {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 900;
-  font-size: clamp(48px,9vw,130px);
-  line-height: 0.85;
-  color: #0C0C0C;
-  flex-shrink: 0;
-  opacity: 0.12;
-  transition: opacity 0.35s;
-}
-
-.service-item:hover .service-num { opacity: 0.22; }
-
-.service-body { flex: 1; padding-top: clamp(8px,1.5vh,20px); }
-
-.service-name {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 600; text-transform: uppercase;
-  font-size: clamp(18px,2.5vw,34px);
-  color: #0C0C0C; letter-spacing: 0.04em;
-  line-height: 1.1;
-}
-
-.service-desc {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(14px,1.5vw,20px);
-  color: rgba(12,12,12,0.5);
-  line-height: 1.7; margin-top: 8px;
-  max-width: 640px;
-}
-
-/* ══════════════════════════════════════
-   RESEARCH / PROJECTS SECTION
-══════════════════════════════════════ */
-.projects-section {
-  background: var(--void);
-  border-radius: 50px 50px 0 0;
-  position: relative; z-index: 3;
-  margin-top: -40px;
-  padding: clamp(60px,10vh,120px) clamp(24px,5vw,80px);
-}
-
-/* Sticky card stack */
-.cards-stack {
-  position: relative;
-  max-width: 1000px; margin: 0 auto;
-}
-
-.card-wrapper {
-  height: 85vh;
-  display: flex; align-items: flex-start;
-}
-
-.card-sticky {
-  position: sticky;
-  top: 120px;
-  width: 100%;
-  will-change: transform;
-}
-
-.proj-card {
-  border-radius: 40px;
-  border: 2px solid rgba(212,168,67,0.18);
-  background: var(--surface);
-  padding: clamp(20px,3vw,40px);
-  position: relative; overflow: hidden;
-  transition: border-color 0.4s;
-}
-
-.proj-card:hover { border-color: rgba(212,168,67,0.4); }
-
-/* Card glow */
-.proj-card::before {
+/* Card top glow line */
+.shloka-card::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(212,168,67,0.5), transparent);
+  background: linear-gradient(to right, transparent, rgba(212,160,60,0.4), transparent);
+  opacity: 0; transition: opacity 0.3s;
 }
+.shloka-card:hover::before { opacity: 1; }
 
-.proj-card-top {
-  display: flex; align-items: center;
-  justify-content: space-between; flex-wrap: wrap;
-  gap: 12px; margin-bottom: clamp(16px,2.5vh,28px);
-}
-
-.proj-num {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 900;
-  font-size: clamp(48px,8vw,100px);
-  line-height: 0.85;
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0.35;
-}
-
-.proj-meta { display: flex; flex-direction: column; gap: 4px; flex: 1; padding-left: 16px; }
-
-.proj-category {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(8px,0.9vw,10px); letter-spacing: 0.2em;
-  color: var(--gold); text-transform: uppercase;
-}
-
-.proj-title {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 700; text-transform: uppercase;
-  font-size: clamp(18px,3vw,38px);
-  color: var(--luminous); letter-spacing: 0.04em;
-  line-height: 1.1;
-}
-
-.btn-live {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 24px; border-radius: 100px;
-  border: 2px solid rgba(212,168,67,0.35);
-  color: var(--t1);
-  font-family: 'Kanit', sans-serif;
-  font-weight: 500; text-transform: uppercase;
-  font-size: clamp(10px,1.1vw,13px); letter-spacing: 0.14em;
-  cursor: pointer; background: transparent;
-  transition: background 0.3s, border-color 0.3s, color 0.3s;
-  flex-shrink: 0;
-}
-
-.btn-live:hover {
-  background: rgba(212,168,67,0.12);
-  border-color: rgba(212,168,67,0.7);
-  color: var(--gold);
-}
-
-/* Card image grid */
-.proj-imgs {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  gap: 12px;
-}
-
-.proj-img-col { display: flex; flex-direction: column; gap: 12px; }
-
-.proj-img {
-  border-radius: 24px;
-  background: var(--deep);
-  overflow: hidden;
-  position: relative;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 8px;
-  border: 1px solid rgba(212,168,67,0.06);
-  transition: border-color 0.4s, transform 0.4s;
-}
-
-.proj-img:hover {
-  border-color: rgba(212,168,67,0.2);
-  transform: scale(1.02);
-}
-
-.proj-img-glyph {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(22px,3vw,40px);
-  font-style: italic;
-  color: rgba(212,168,67,0.3);
-  text-align: center; padding: 0 12px;
-  line-height: 1.3;
-}
-
-.proj-img-label {
-  font-family: 'Space Mono', monospace;
-  font-size: clamp(7px,0.8vw,9px);
-  letter-spacing: 0.15em; color: var(--t3);
-  text-transform: uppercase; text-align: center;
-  padding: 0 12px;
-}
-
-.proj-img-sm { height: clamp(120px,14vw,200px); }
-.proj-img-md { height: clamp(150px,18vw,250px); }
-.proj-img-tall { height: 100%; min-height: clamp(280px,36vw,460px); }
-
-/* ══════════════════════════════════════
-   QUALIFICATIONS (Dark bg)
-══════════════════════════════════════ */
-.qual-section {
-  background: var(--void);
-  padding: clamp(60px,10vh,120px) clamp(24px,5vw,80px);
-  position: relative; z-index: 1;
-}
-
-.qual-grid { display: grid; gap: 14px; max-width: 880px; }
-
-.qual-card {
-  display: grid;
-  grid-template-columns: 60px 1fr auto;
-  align-items: start; gap: 20px;
-  padding: clamp(18px,2.5vh,28px) clamp(20px,3vw,34px);
-  background: rgba(12,12,26,0.85);
-  border: 1px solid rgba(212,168,67,0.08);
-  position: relative; overflow: hidden;
-  transition: border-color 0.4s, box-shadow 0.4s, transform 0.5s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.qual-card::before {
+/* Card inner glow */
+.shloka-card::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(212,168,67,0.04) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 20% 0%, rgba(212,160,60,0.04) 0%, transparent 60%);
   pointer-events: none;
 }
 
-.qual-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(to right, transparent, rgba(212,168,67,0.5), transparent);
-  opacity: 0; transition: opacity 0.4s;
+/* Source badge */
+.shloka-source {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 18px;
 }
-
-.qual-card:hover {
-  border-color: rgba(212,168,67,0.3);
-  box-shadow: 0 8px 48px rgba(212,168,67,0.05);
-  transform: translateX(8px);
-}
-
-.qual-card:hover::after { opacity: 1; }
-
-.qual-idx {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 900;
-  font-size: clamp(32px,4vw,52px);
-  line-height: 1; text-align: right;
-  color: rgba(212,168,67,0.14);
-}
-
-.qual-degree {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(18px,2.2vw,24px);
-  font-weight: 400; color: var(--luminous); line-height: 1.3;
-}
-
-.qual-inst {
-  font-size: clamp(12px,1.4vw,15px);
-  color: var(--t2); margin-top: 4px; line-height: 1.5;
-}
-
-.qual-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-
-.tag {
-  display: inline-block;
+.source-badge {
+  padding: 4px 12px;
+  border-radius: 100px;
   font-family: 'Space Mono', monospace;
-  font-size: clamp(7px,0.8vw,9px); letter-spacing: 0.12em;
-  padding: 3px 10px; border-radius: 2px; text-transform: uppercase;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
 }
+.badge-gita    { background: rgba(212,160,60,0.15); color: #d4b060; border: 1px solid rgba(212,160,60,0.2); }
+.badge-ramayana{ background: rgba(232,133,26,0.12); color: #e8951a; border: 1px solid rgba(232,133,26,0.2); }
+.badge-mahabharata { background: rgba(139,34,82,0.15); color: #d4609a; border: 1px solid rgba(139,34,82,0.2); }
+.badge-upanishad { background: rgba(26,122,110,0.15); color: #40c0a8; border: 1px solid rgba(26,122,110,0.2); }
+.badge-vedas   { background: rgba(80,60,140,0.18); color: #a090e8; border: 1px solid rgba(80,60,140,0.25); }
+.badge-chanakya{ background: rgba(60,100,80,0.15); color: #70c090; border: 1px solid rgba(60,100,80,0.2); }
+.badge-other   { background: rgba(80,80,80,0.15); color: #a0a0a0; border: 1px solid rgba(80,80,80,0.2); }
 
-.tag-gold { color: var(--gold); border: 1px solid rgba(212,168,67,0.32); background: rgba(212,168,67,0.07); }
-.tag-blue { color: var(--blue); border: 1px solid rgba(74,127,165,0.32); background: rgba(74,127,165,0.07); }
-.tag-vi   { color: var(--violet); border: 1px solid rgba(122,95,165,0.32); background: rgba(122,95,165,0.07); }
-
-.qual-year {
+.source-ref {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(10px,1.1vw,12px); color: var(--t3);
-  white-space: nowrap; padding-top: 4px;
+  font-size: 9px; color: var(--t3);
+  letter-spacing: 0.08em;
 }
 
-/* ══════════════════════════════════════
-   EXPERIENCE TIMELINE
-══════════════════════════════════════ */
-.exp-section {
-  padding: clamp(60px,10vh,120px) clamp(24px,5vw,80px);
-  background: var(--void); position: relative; z-index: 1;
+/* Sanskrit text */
+.shloka-sanskrit {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 400;
+  color: var(--t1);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  border-left: 2px solid rgba(212,160,60,0.2);
+  padding-left: 16px;
 }
 
-.timeline { position: relative; padding-left: 44px; display: grid; gap: 18px; max-width: 880px; }
+.shloka-highlight { color: var(--gold-light); font-weight: 500; }
 
-.timeline::before {
-  content: ''; position: absolute;
-  left: 12px; top: 16px; bottom: 16px; width: 1px;
-  background: linear-gradient(to bottom, var(--gold), rgba(212,168,67,0.06));
+/* Transliteration */
+.shloka-iast {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-style: italic;
+  color: var(--t3);
+  line-height: 1.7;
+  margin-bottom: 14px;
+  padding-left: 16px;
 }
 
-.tl-item {
-  position: relative;
-  background: rgba(12,12,26,0.85);
-  border: 1px solid rgba(212,168,67,0.08);
-  padding: clamp(18px,2.5vh,28px) clamp(20px,3vw,34px);
-  transition: border-color 0.4s, box-shadow 0.4s, transform 0.5s cubic-bezier(0.25,0.1,0.25,1);
-  overflow: hidden;
+/* Divider */
+.card-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
 }
 
-.tl-item::before {
-  content: ''; position: absolute;
-  left: -38px; top: clamp(18px,2.5vh,26px);
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--void); border: 2px solid var(--gold);
-  box-shadow: 0 0 16px rgba(212,168,67,0.6);
-  transition: box-shadow 0.4s;
+/* Translation */
+.shloka-translation {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.3vw, 15px);
+  color: var(--t2);
+  line-height: 1.7;
+  font-weight: 300;
 }
 
-.tl-item:hover { border-color: rgba(212,168,67,0.3); transform: translateX(8px); }
-.tl-item:hover::before { box-shadow: 0 0 28px rgba(212,168,67,1); }
-
-.tl-current::before { background: var(--gold); }
-
-.tl-header {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+/* Card footer */
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 18px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap; gap: 8px;
 }
-
-.tl-role {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 600; font-size: clamp(18px,2.5vw,28px);
-  color: var(--luminous); line-height: 1.15;
-}
-
-.tl-period {
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.card-tag {
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
   font-family: 'Space Mono', monospace;
-  font-size: clamp(8px,1vw,10px); letter-spacing: 0.12em;
-  color: var(--gold); padding: 4px 12px;
-  border: 1px solid rgba(212,168,67,0.22);
-  white-space: nowrap; flex-shrink: 0;
+  font-size: 8px; color: var(--t3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.card-actions { display: flex; gap: 8px; }
+.card-action-btn {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--t3); font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.card-action-btn:hover {
+  border-color: var(--border-hi);
+  color: var(--gold);
+  background: var(--gold-dim);
 }
 
-.tl-dept {
-  font-size: clamp(12px,1.4vw,15px);
-  color: var(--t2); margin-top: 6px; line-height: 1.5;
+/* ─── EMPTY STATE ─── */
+.empty-state {
+  text-align: center; padding: 80px 24px;
+  display: none;
 }
-
-/* ══════════════════════════════════════
-   BOOKS
-══════════════════════════════════════ */
-.books-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: clamp(16px,2.5vw,28px); max-width: 880px;
+.empty-state.show { display: block; }
+.empty-om {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 64px; color: var(--t3);
+  display: block; margin-bottom: 16px; opacity: 0.4;
 }
-
-.book-card {
-  background: rgba(12,12,26,0.85);
-  border: 1px solid rgba(212,168,67,0.1);
-  padding: clamp(24px,3vw,40px);
-  position: relative; overflow: hidden;
-  transition: border-color 0.4s, box-shadow 0.4s, transform 0.5s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.book-card::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; width: 3px; height: 100%;
-  background: linear-gradient(to bottom, var(--gold), rgba(212,168,67,0.1));
-}
-
-.book-card:hover {
-  border-color: rgba(212,168,67,0.35);
-  box-shadow: 0 16px 60px rgba(212,168,67,0.07);
-  transform: translateY(-10px);
-}
-
-.book-badge {
-  font-family: 'Space Mono', monospace; font-size: 8px;
-  letter-spacing: 0.22em; color: var(--gold); opacity: 0.55;
-  text-transform: uppercase; margin-bottom: 14px;
-}
-
-.book-title {
+.empty-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(17px,2.2vw,24px);
-  font-style: italic; font-weight: 400;
-  color: var(--luminous); line-height: 1.35; margin-bottom: 10px;
+  font-size: 24px; color: var(--t2);
+  font-style: italic; margin-bottom: 8px;
 }
-
-.book-pub { font-size: clamp(11px,1.3vw,14px); color: var(--t2); line-height: 1.5; }
-
-.book-isbn {
-  font-family: 'Space Mono', monospace; font-size: 9px;
-  color: var(--t3); margin-top: 12px; letter-spacing: 0.05em;
-}
-
-/* ══════════════════════════════════════
-   JOURNALS GRID
-══════════════════════════════════════ */
-.journals-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 14px; max-width: 880px;
-}
-
-.journal-card {
-  background: rgba(212,168,67,0.02);
-  border: 1px solid rgba(212,168,67,0.07);
-  padding: clamp(18px,2.5vh,26px) clamp(18px,2.5vw,28px);
-  transition: border-color 0.35s, background 0.35s, transform 0.5s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.journal-card:hover {
-  border-color: rgba(212,168,67,0.24);
-  background: rgba(212,168,67,0.05);
-  transform: translateY(-6px);
-}
-
-.journal-icon { font-size: 18px; margin-bottom: 10px; opacity: 0.65; }
-
-.journal-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(16px,2vw,21px); font-style: italic; color: var(--t1);
-}
-
-.journal-role-badge {
-  display: inline-block;
-  font-family: 'Space Mono', monospace; font-size: 8px;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--gold); border: 1px solid rgba(212,168,67,0.25);
-  padding: 2px 8px; margin: 8px 0;
-}
-
-.journal-period { font-size: clamp(11px,1.2vw,13px); color: var(--t3); line-height: 1.5; }
-
-/* ══════════════════════════════════════
-   RESEARCH PAPERS
-══════════════════════════════════════ */
-.pubs-grid { display: grid; gap: 10px; max-width: 880px; }
-
-.pub-card {
-  display: grid; grid-template-columns: 50px 1fr;
-  gap: 16px; align-items: start;
-  padding: clamp(14px,2vh,20px) clamp(18px,2.5vw,26px);
-  background: rgba(212,168,67,0.02);
-  border: 1px solid rgba(212,168,67,0.06);
-  position: relative; overflow: hidden;
-  transition: border-color 0.3s, background 0.3s, transform 0.4s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.pub-card::before {
-  content: ''; position: absolute;
-  left: 0; top: 0; bottom: 0; width: 2px;
-  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-  opacity: 0; transition: opacity 0.3s;
-}
-
-.pub-card:hover {
-  border-color: rgba(212,168,67,0.2);
-  background: rgba(212,168,67,0.04);
-  transform: translateX(6px);
-}
-
-.pub-card:hover::before { opacity: 1; }
-
-.pub-num {
-  font-family: 'Kanit', sans-serif; font-weight: 900;
-  font-size: clamp(26px,3.5vw,42px); line-height: 1;
-  text-align: right; color: rgba(212,168,67,0.17); padding-top: 2px;
-}
-
-.pub-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(15px,1.8vw,20px); font-weight: 400;
-  color: var(--t1); line-height: 1.45;
-}
-
-.pub-meta {
+.empty-sub {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(8px,0.9vw,10px); color: var(--t3);
-  margin-top: 5px; letter-spacing: 0.04em;
+  font-size: 11px; color: var(--t3);
+  letter-spacing: 0.1em;
 }
 
-.pub-issn {
-  display: inline-block;
-  font-family: 'Space Mono', monospace; font-size: 8px;
-  color: var(--blue); border: 1px solid rgba(74,127,165,0.25);
-  padding: 1px 6px; margin-left: 6px; vertical-align: middle;
-}
-
-/* ══════════════════════════════════════
-   CONFERENCES
-══════════════════════════════════════ */
-.conf-grid { display: grid; gap: 10px; max-width: 880px; }
-
-.conf-card {
-  display: grid; grid-template-columns: 48px 1fr auto;
-  align-items: start; gap: 14px;
-  padding: clamp(12px,1.8vh,18px) clamp(16px,2vw,22px);
-  background: rgba(212,168,67,0.02);
-  border: 1px solid rgba(212,168,67,0.05);
-  transition: border-color 0.3s, background 0.3s, transform 0.4s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.conf-card:hover {
-  border-color: rgba(212,168,67,0.18);
-  background: rgba(212,168,67,0.04);
-  transform: translateX(4px);
-}
-
-.conf-num {
-  font-family: 'Space Mono', monospace; font-size: 10px;
-  color: rgba(212,168,67,0.28); text-align: right; padding-top: 3px;
-}
-
-.conf-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(14px,1.7vw,18px); color: var(--t1); line-height: 1.4;
-}
-
-.conf-host { font-size: clamp(10px,1.1vw,12px); color: var(--t3); margin-top: 3px; line-height: 1.4; }
-
-.badge {
-  font-family: 'Space Mono', monospace; font-size: 8px;
-  letter-spacing: 0.12em; padding: 3px 8px;
-  border: 1px solid; text-transform: uppercase;
-  white-space: nowrap; align-self: start; border-radius: 2px;
-}
-
-.badge-intl { color: var(--gold); border-color: rgba(212,168,67,0.3); background: rgba(212,168,67,0.06); }
-.badge-natl { color: var(--blue); border-color: rgba(74,127,165,0.3); background: rgba(74,127,165,0.06); }
-
-/* ══════════════════════════════════════
-   MEMBERS
-══════════════════════════════════════ */
-.member-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 12px; max-width: 880px;
-}
-
-.member-card {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: clamp(14px,2vh,18px) clamp(16px,2vw,22px);
-  background: rgba(212,168,67,0.02);
-  border: 1px solid rgba(212,168,67,0.06);
-  font-size: clamp(12px,1.3vw,14px); color: var(--t2); line-height: 1.55;
-  transition: border-color 0.35s, background 0.35s, transform 0.5s cubic-bezier(0.25,0.1,0.25,1);
-}
-
-.member-card:hover {
-  border-color: rgba(212,168,67,0.22);
-  background: rgba(212,168,67,0.04);
-  transform: scale(1.025);
-}
-
-.member-orb {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--gold); box-shadow: 0 0 8px rgba(212,168,67,0.7);
-  flex-shrink: 0; margin-top: 7px;
-}
-
-/* ══════════════════════════════════════
-   FOOTER
-══════════════════════════════════════ */
-.footer {
-  background: var(--void);
-  border-top: 1px solid rgba(212,168,67,0.08);
-  padding: clamp(36px,6vh,72px) clamp(24px,5vw,80px);
-  display: flex; justify-content: space-between;
-  align-items: center; flex-wrap: wrap; gap: 24px;
+/* ─── FEATURED / DAILY SHLOKA ─── */
+.daily-section {
   position: relative; z-index: 1;
+  padding: 60px 24px 0;
+  max-width: 1100px; margin: 0 auto;
 }
 
-.footer-brand {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(20px,2.5vw,28px); font-style: italic; color: var(--gold); opacity: 0.7;
+.daily-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px;
 }
-
-.footer-meta {
-  text-align: right;
-}
-
-.footer-inst {
-  font-family: 'Kanit', sans-serif;
-  font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em;
-  font-size: clamp(12px,1.4vw,16px); color: var(--t1); margin-bottom: 4px;
-}
-
-.footer-copy {
+.daily-label {
   font-family: 'Space Mono', monospace;
-  font-size: clamp(8px,0.9vw,10px); color: var(--t3); letter-spacing: 0.1em;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: var(--gold); text-transform: uppercase;
+}
+.daily-line { flex: 1; height: 1px; background: var(--border); }
+
+.daily-card {
+  background: linear-gradient(135deg, rgba(20,12,4,0.95) 0%, rgba(12,8,20,0.95) 100%);
+  border: 1px solid rgba(212,160,60,0.25);
+  border-radius: 28px;
+  padding: 36px 40px;
+  position: relative; overflow: hidden;
+  margin-bottom: 60px;
 }
 
-/* ══════════════════════════════════════
-   REVEAL UTILITY
-══════════════════════════════════════ */
-.reveal {
-  opacity: 0; transform: translateY(32px);
-  transition: opacity 0.75s cubic-bezier(0.25,0.1,0.25,1),
-              transform 0.75s cubic-bezier(0.25,0.1,0.25,1);
+.daily-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), var(--saffron), transparent);
 }
 
-.reveal.left  { transform: translateX(-32px); }
-.reveal.right { transform: translateX(32px); }
-
-.reveal.in { opacity: 1; transform: none; }
-
-/* Stagger via data attr */
-.reveal[data-d="1"]  { transition-delay: 0.05s; }
-.reveal[data-d="2"]  { transition-delay: 0.10s; }
-.reveal[data-d="3"]  { transition-delay: 0.15s; }
-.reveal[data-d="4"]  { transition-delay: 0.20s; }
-.reveal[data-d="5"]  { transition-delay: 0.25s; }
-.reveal[data-d="6"]  { transition-delay: 0.30s; }
-.reveal[data-d="7"]  { transition-delay: 0.35s; }
-.reveal[data-d="8"]  { transition-delay: 0.40s; }
-.reveal[data-d="9"]  { transition-delay: 0.45s; }
-.reveal[data-d="10"] { transition-delay: 0.50s; }
-.reveal[data-d="11"] { transition-delay: 0.55s; }
-.reveal[data-d="12"] { transition-delay: 0.60s; }
-
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
-@media (max-width: 700px) {
-  .books-grid,
-  .journals-grid,
-  .member-grid { grid-template-columns: 1fr; }
-  .conf-card   { grid-template-columns: 32px 1fr; }
-  .badge       { display: none; }
-  .qual-card   { grid-template-columns: 40px 1fr auto; }
-  .r1, .r2, .r3, .hero-mandala { display: none; }
-  .deco-tl, .deco-bl, .deco-tr, .deco-br { display: none; }
-  .proj-imgs   { grid-template-columns: 1fr; }
-  .proj-img-tall { min-height: 200px; height: 200px; }
-  .nav-links   { display: none; }
-  .hero-portrait-wrap { display: none; }
-  .footer      { flex-direction: column; text-align: center; }
-  .footer-meta { text-align: center; }
+.daily-bg-text {
+  position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 160px; line-height: 1;
+  color: rgba(212,160,60,0.04); pointer-events: none;
+  white-space: nowrap; overflow: hidden;
 }
 
-@media (max-width: 480px) {
-  .hero-stats  { flex-wrap: wrap; }
-  .stat        { padding: 10px 16px; }
+.daily-content { position: relative; z-index: 1; }
+
+.daily-shloka-text {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: clamp(20px, 3vw, 30px);
+  font-weight: 400;
+  color: var(--t1);
+  line-height: 1.9;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: duration 0.01ms !important; }
+.daily-iast {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-style: italic;
+  color: var(--gold);
+  opacity: 0.7;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.daily-translation {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: var(--t2);
+  font-weight: 300;
+  text-align: center;
+  line-height: 1.8;
+  max-width: 680px;
+  margin: 0 auto 24px;
+}
+
+.daily-meta {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--t3); text-transform: uppercase;
+}
+
+/* ─── TOPIC BROWSERS ─── */
+.topics-section {
+  position: relative; z-index: 1;
+  padding: 0 24px 60px;
+  max-width: 1100px; margin: 0 auto;
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.topic-card:hover {
+  border-color: var(--border-hi);
+  background: rgba(212,160,60,0.05);
+  transform: translateY(-3px);
+}
+.topic-icon {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 28px; display: block;
+  color: var(--gold); margin-bottom: 8px;
+}
+.topic-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--t1); margin-bottom: 4px;
+}
+.topic-count {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--t3);
+  letter-spacing: 0.1em;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative; z-index: 1;
+  padding: 40px 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer-om {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 32px; color: var(--gold);
+  opacity: 0.5; display: block; margin-bottom: 12px;
+}
+.footer-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  color: var(--t3); text-transform: uppercase;
+}
+.footer-links { display: flex; gap: 20px; justify-content: center; margin-top: 16px; }
+.footer-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em;
+  color: var(--t3); text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: var(--gold); }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(20px, 4vw, 48px);
+  height: 64px;
+  transition: background 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  background: rgba(2,2,9,0.9);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; text-decoration: none;
+}
+.nav-om {
+  font-family: 'Noto Sans Devanagari', serif;
+  font-size: 22px; color: var(--gold);
+}
+.nav-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; font-weight: 600; font-style: italic;
+  color: var(--t1);
+}
+.nav-links-row {
+  display: flex; gap: 28px; list-style: none;
+}
+.nav-links-row a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  color: var(--t3); text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links-row a:hover { color: var(--gold); }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(12,12,28,0.95);
+  border: 1px solid var(--border-hi);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  color: var(--gold);
+  z-index: 999;
+  opacity: 0; pointer-events: none;
+  transition: all 0.35s;
+  backdrop-filter: blur(20px);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── SECTION HEADERS ─── */
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px;
+}
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: var(--gold); text-transform: uppercase;
+}
+.section-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .nav-links-row { display: none; }
+  .daily-card { padding: 24px 20px; }
+  .shloka-card { padding: 20px; }
+  .results-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 20px; }
+  .filters-bar { gap: 6px; }
+  .filter-btn { padding: 6px 13px; }
+  .topics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ─── LOADING SPINNER ─── */
+.loading {
+  display: none;
+  text-align: center; padding: 40px;
+}
+.loading.show { display: block; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── SCRIPTURE SECTION BREAK ─── */
+.scripture-break {
+  padding: 12px 0 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.25em;
+  color: var(--t3); text-transform: uppercase;
+  display: flex; align-items: center; gap: 12px;
+}
+.scripture-break::before, .scripture-break::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
 }
 </style>
 </head>
+
 <body>
-
-<!-- Scroll progress -->
-<div id="progress"></div>
-
-<!-- Starfield canvas -->
-<canvas id="starfield"></canvas>
+<!-- Particle canvas -->
+<canvas id="particles-canvas"></canvas>
 
 <!-- Navigation -->
-<nav id="nav" aria-label="Main navigation">
-  <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <span class="nav-logo-name">Dr. S. K. Padhi</span>
-    <span class="nav-logo-sub">Vedānta · BHU</span>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#qualifications">Education</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#research">Research</a></li>
-    <li><a href="#contact">Contact</a></li>
+<nav id="nav">
+  <a class="nav-brand" href="#">
+    <span class="nav-om">ॐ</span>
+    <span class="nav-name">Shloka Finder</span>
+  </a>
+  <ul class="nav-links-row">
+    <li><a href="#search-section">Search</a></li>
+    <li><a href="#topics-section">Topics</a></li>
+    <li><a href="https://github.com/shrikanthdevaru-lang/dr-saroj-kumar-padhi-portfolio" target="_blank">GitHub ↗</a></li>
   </ul>
 </nav>
 
-<div class="universe">
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
 
-  <!-- ══════════ HERO ══════════ -->
-  <section class="hero" aria-label="Introduction">
+  <div class="hero-content">
+    <span class="hero-om">ॐ</span>
+    <div class="hero-eyebrow">Ancient Wisdom · Digital Access</div>
+    <h1 class="hero-title">Sanskrit Shloka Finder</h1>
+    <p class="hero-subtitle">Search thousands of shlokas from Vedas, Gita, Ramayana & all major scriptures</p>
 
-    <!-- Decorative orbit rings -->
-    <div class="ring r1" aria-hidden="true"></div>
-    <div class="ring r2" aria-hidden="true"></div>
-    <div class="ring r3" aria-hidden="true"></div>
-    <div class="hero-mandala" aria-hidden="true"></div>
-
-    <div class="hero-content">
-      <div class="hero-eyebrow">Curriculum Vitae · Academic Portfolio</div>
-
-      <div class="hero-dr">Dr.</div>
-
-      <h1 class="hero-name">
-        Saroj Kumar<br>
-        <span class="hero-name-italic">Padhi</span>
-      </h1>
-
-      <p class="hero-tagline">
-        Professor of Vaidic Darshan<br>
-        Faculty of Sanskrit Vidya Dharmavijnan
-      </p>
-
-      <p class="hero-inst">Banaras Hindu University &nbsp;·&nbsp; Varanasi — 221 005, India</p>
-
-      <!-- Stats -->
-      <div class="hero-stats" aria-label="Quick statistics">
-        <div class="stat">
-          <div class="stat-num" id="years-count">0+</div>
-          <div class="stat-label">Years Teaching</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">12+</div>
-          <div class="stat-label">Research Papers</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">04</div>
-          <div class="stat-label">Journals Edited</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">12</div>
-          <div class="stat-label">Conferences</div>
-        </div>
+    <!-- Search -->
+    <div class="search-container" id="search-section">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Type any word in Sanskrit, IAST or English… e.g. dharma, karma, अर्जुन"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button class="search-btn" onclick="doSearch()">खोजें</button>
       </div>
-
-      <!-- Contact chips -->
-      <div class="hero-contact">
-        <div class="chip">
-          <span class="chip-icon">✉</span>
-          sarojbhu@gmail.com
-        </div>
-        <div class="chip">
-          <span class="chip-icon">✆</span>
-          +91 94515 26752
-        </div>
-        <div class="chip">
-          <span class="chip-icon">📍</span>
-          Varanasi, India
-        </div>
-      </div>
+      <div class="search-suggestions" id="suggestions"></div>
     </div>
 
-    <!-- Portrait placeholder (elegant frame) -->
-    <div class="hero-portrait-wrap" id="portrait" aria-hidden="true">
-      <div style="
-        width: clamp(200px,25vw,380px);
-        height: clamp(280px,36vw,540px);
-        border: 1px solid rgba(212,168,67,0.18);
-        border-radius: 8px;
-        background: rgba(12,12,26,0.6);
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        gap: 12px;
-        position: relative; overflow: hidden;
-      ">
-        <div style="
-          position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 30% 20%, rgba(212,168,67,0.07), transparent 60%);
-        "></div>
-        <!-- Decorative mandala using the generated image -->
-        <img src="/Users/sjs.iss/.gemini/antigravity/brain/98b30b08-183c-4426-9665-7b5abd84acd2/vedic_mandala_bg_1780988018178.png"
-             alt="Vedic Mandala"
-             style="width:80%; opacity:0.4; position:absolute; inset:0; margin:auto; object-fit:cover; height:100%;"
-             onerror="this.style.display='none'">
-        <div style="
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(44px,6vw,80px);
-          font-style: italic;
-          color: rgba(212,168,67,0.6);
-          line-height: 1;
-          position: relative; z-index: 1;
-          background: linear-gradient(180deg, #d4a843, #f5edd8);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text;
-        ">ॐ</div>
-        <div style="
-          font-family: 'Space Mono', monospace;
-          font-size: 9px; letter-spacing: 0.3em;
-          color: rgba(212,168,67,0.35); text-transform: uppercase;
-          position: relative; z-index: 1;
-        ">Advaita Vedānta</div>
-        <div style="
-          font-family: 'Cormorant Garamond', serif;
-          font-style: italic; font-size: clamp(13px,1.5vw,17px);
-          color: rgba(232,217,192,0.5);
-          text-align: center; padding: 0 20px;
-          position: relative; z-index: 1;
-          line-height: 1.5;
-        ">सर्वं खल्विदं ब्रह्म<br><span style="font-size:0.7em;opacity:0.6;">All this indeed is Brahman</span></div>
-      </div>
+    <!-- Filters -->
+    <div class="filters-bar" id="filters">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All Scriptures</button>
+      <button class="filter-btn" onclick="setFilter('gita', this)">Bhagavad Gita</button>
+      <button class="filter-btn" onclick="setFilter('ramayana', this)">Ramayana</button>
+      <button class="filter-btn" onclick="setFilter('mahabharata', this)">Mahabharata</button>
+      <button class="filter-btn" onclick="setFilter('upanishad', this)">Upanishads</button>
+      <button class="filter-btn" onclick="setFilter('vedas', this)">Vedas</button>
+      <button class="filter-btn" onclick="setFilter('chanakya', this)">Chanakya Niti</button>
     </div>
 
-    <div class="scroll-cue" aria-hidden="true">
-      <div class="scroll-line"></div>
-      <span class="scroll-txt">Explore Portfolio</span>
-    </div>
-  </section>
-
-  <!-- ══════════ MARQUEE ══════════ -->
-  <section class="marquee-section" aria-label="Research themes">
-    <div id="marquee-row1" class="marquee-track"></div>
-    <div id="marquee-row2" class="marquee-track" style="margin-top:16px"></div>
-  </section>
-
-  <!-- ══════════ ABOUT ══════════ -->
-  <section class="about-section" id="about" aria-labelledby="about-h">
-
-    <!-- Corner decorations -->
-    <div class="about-deco deco-tl reveal left" data-d="1">
-      <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
-           alt="" onerror="this.closest('.about-deco').innerHTML='<div style=\'font-size:60px;opacity:0.2\'>🌙</div>'">
-    </div>
-    <div class="about-deco deco-bl reveal left" data-d="3">
-      <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
-           alt="" onerror="this.closest('.about-deco').innerHTML='<div style=\'font-size:52px;opacity:0.15\'>💠</div>'">
-    </div>
-    <div class="about-deco deco-tr reveal right" data-d="2">
-      <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
-           alt="" onerror="this.closest('.about-deco').innerHTML='<div style=\'font-size:60px;opacity:0.2\'>🏺</div>'">
-    </div>
-    <div class="about-deco deco-br reveal right" data-d="4">
-      <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
-           alt="" onerror="this.closest('.about-deco').innerHTML='<div style=\'font-size:68px;opacity:0.15\'>📜</div>'">
-    </div>
-
-    <div class="about-inner">
-      <h2 class="about-heading reveal" id="about-h">About Me</h2>
-
-      <p class="about-text" id="about-text">
-        With more than twenty years of experience in Sanskrit scholarship and Vedic philosophy,
-        I focus on Advaita Vedānta, Indian epistemology, and contemporary philosophical thought.
-        I truly enjoy guiding students who aspire to explore the depths of our ancient wisdom traditions.
-        Let us illuminate the path of knowledge together.
-      </p>
-
-      <div class="reveal" data-d="3">
-        <button class="btn-contact" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
-          ✉ &nbsp; Connect With Me
-        </button>
+    <!-- Stats -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num" id="totalCount">1,200+</span>
+        <span class="stat-label">Shlokas</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">12+</span>
+        <span class="stat-label">Scriptures</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Languages</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">Wisdom</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══════════ SERVICES (Teaching Areas) ══════════ -->
-  <section class="services-section" id="services" aria-labelledby="serv-h">
-    <div class="section-eyebrow" style="color:#0C0C0C;opacity:0.4;justify-content:center">Areas of Expertise</div>
-    <h2 class="section-heading" id="serv-h">Teaching &amp;<br>Research Areas</h2>
-
-    <div class="services-list">
-      <div class="service-item reveal" data-d="1">
-        <div class="service-num">01</div>
-        <div class="service-body">
-          <div class="service-name">Advaita Vedānta</div>
-          <div class="service-desc">Systematic study of non-dualistic philosophy of Śaṅkarācārya — Brahman, Māyā, Ātman, and the path to liberation through knowledge.</div>
-        </div>
-      </div>
-      <div class="service-item reveal" data-d="2">
-        <div class="service-num">02</div>
-        <div class="service-body">
-          <div class="service-name">Indian Epistemology</div>
-          <div class="service-desc">Pramāṇaśāstra — the theory of valid knowledge sources including perception, inference, and verbal testimony across the six Āstika darśanas.</div>
-        </div>
-      </div>
-      <div class="service-item reveal" data-d="3">
-        <div class="service-num">03</div>
-        <div class="service-body">
-          <div class="service-name">Upaniṣadic Philosophy</div>
-          <div class="service-desc">Deep textual analysis of the principal Upaniṣads — their cosmogony, ontology, and soteriological vision in the context of Vedic revelation.</div>
-        </div>
-      </div>
-      <div class="service-item reveal" data-d="4">
-        <div class="service-num">04</div>
-        <div class="service-body">
-          <div class="service-name">Sanskrit Grammar &amp; Hermeneutics</div>
-          <div class="service-desc">Pāṇinian grammar, Vākyapadīya of Bharṭrhari, and Mīmāṃsā interpretive methods applied to canonical Sanskrit texts.</div>
-        </div>
-      </div>
-      <div class="service-item reveal" data-d="5">
-        <div class="service-num">05</div>
-        <div class="service-body">
-          <div class="service-name">Contemporary Indian Philosophy</div>
-          <div class="service-desc">Dialogue between classical Vedāntic thought and modern philosophy — ethics, consciousness studies, and the relevance of ancient wisdom today.</div>
-        </div>
-      </div>
+<!-- DAILY SHLOKA -->
+<section class="daily-section">
+  <div class="daily-header">
+    <span class="daily-label">Shloka of the Day</span>
+    <div class="daily-line"></div>
+    <button class="filter-btn" onclick="rotateDailyShloka()" style="flex-shrink:0">Next ↻</button>
+  </div>
+  <div class="daily-card" id="dailyCard">
+    <div class="daily-bg-text" id="dailyBgText">ॐ</div>
+    <div class="daily-content">
+      <div class="daily-shloka-text" id="dailyShloka">Loading...</div>
+      <div class="daily-iast" id="dailyIast"></div>
+      <div class="daily-translation" id="dailyTranslation"></div>
+      <div class="daily-meta" id="dailyMeta"></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══════════ QUALIFICATIONS ══════════ -->
-  <section class="qual-section section" id="qualifications" aria-labelledby="qual-h">
-    <div class="section-eyebrow">Academic Formation</div>
-    <h2 class="section-heading" id="qual-h">Qualifications</h2>
+<!-- RESULTS -->
+<main>
+  <div class="status-bar" id="statusBar" style="display:none">
+    <span class="status-count" id="statusCount">Found <span>0</span> shlokas</span>
+    <select class="sort-select" id="sortSelect" onchange="sortResults()">
+      <option value="relevance">Most Relevant</option>
+      <option value="scripture">By Scripture</option>
+      <option value="length">By Length</option>
+    </select>
+  </div>
+  <div class="loading" id="loadingDiv">
+    <div class="spinner"></div>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:0.2em">SEARCHING SCRIPTURES...</div>
+  </div>
+  <div class="results-grid" id="resultsGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <span class="empty-om">ॐ</span>
+    <div class="empty-title">No shlokas found</div>
+    <div class="empty-sub">Try searching in Sanskrit, IAST transliteration, or English</div>
+  </div>
+</main>
 
-    <div class="qual-grid">
-      <div class="qual-card reveal" data-d="1">
-        <div class="qual-idx">01</div>
-        <div>
-          <div class="qual-degree">Śāstrī — Advaita Vedānta</div>
-          <div class="qual-inst">Rāṣṭrīya Sanskrit Vidyāpīṭha, Tirupati, Andhra Pradesh</div>
-          <div class="qual-tags"><span class="tag tag-gold">Gold Medalist</span></div>
-        </div>
-        <div class="qual-year">2000</div>
-      </div>
+<!-- TOPIC BROWSING -->
+<section class="topics-section" id="topics-section">
+  <div class="section-header">
+    <span class="section-label">Browse by Topic</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="topics-grid" id="topicsGrid"></div>
+</section>
 
-      <div class="qual-card reveal" data-d="2">
-        <div class="qual-idx">02</div>
-        <div>
-          <div class="qual-degree">Śikṣyā Śāstrī (B.Ed. equivalent)</div>
-          <div class="qual-inst">Rāṣṭrīya Sanskrit Saṃsthān, New Delhi</div>
-        </div>
-        <div class="qual-year">2001</div>
-      </div>
+<!-- FOOTER -->
+<footer>
+  <span class="footer-om">ॐ</span>
+  <div class="footer-text">Preserving Ancient Sanskrit Wisdom for the Digital Age</div>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/shrikanthdevaru-lang" target="_blank">GitHub</a>
+    <a class="footer-link" href="#hero">Back to Top</a>
+    <a class="footer-link" href="#topics-section">Topics</a>
+  </div>
+</footer>
 
-      <div class="qual-card reveal" data-d="3">
-        <div class="qual-idx">03</div>
-        <div>
-          <div class="qual-degree">Ācārya — Advaita Vedānta</div>
-          <div class="qual-inst">Rāṣṭrīya Sanskrit Vidyāpīṭha, Tirupati, Andhra Pradesh</div>
-          <div class="qual-tags">
-            <span class="tag tag-gold">Gold Medalist</span>
-            <span class="tag tag-gold">1st Division</span>
-          </div>
-        </div>
-        <div class="qual-year">2003</div>
-      </div>
-
-      <div class="qual-card reveal" data-d="4">
-        <div class="qual-idx">04</div>
-        <div>
-          <div class="qual-degree">Doctor of Philosophy (Ph.D.)</div>
-          <div class="qual-inst">Rāṣṭrīya Sanskrit Vidyāpīṭha, Tirupati, Andhra Pradesh</div>
-          <div class="qual-tags">
-            <span class="tag tag-blue">UGC–NET</span>
-            <span class="tag tag-vi">JRF Qualified</span>
-          </div>
-        </div>
-        <div class="qual-year">2008</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════ EXPERIENCE ══════════ -->
-  <section class="exp-section" id="experience" aria-labelledby="exp-h">
-    <div class="section-eyebrow">Professional Journey</div>
-    <h2 class="section-heading" id="exp-h">Experience</h2>
-
-    <div class="timeline">
-      <div class="tl-item tl-current reveal" data-d="1">
-        <div class="tl-header">
-          <div class="tl-role">Professor</div>
-          <div class="tl-period">Nov 2018 — Present</div>
-        </div>
-        <div class="tl-dept">Department of Vaidic Darshan · Faculty of SVDV · Banaras Hindu University, Varanasi</div>
-      </div>
-
-      <div class="tl-item reveal" data-d="2">
-        <div class="tl-header">
-          <div class="tl-role">Assistant Professor</div>
-          <div class="tl-period">Nov 2006 — Nov 2018</div>
-        </div>
-        <div class="tl-dept">Department of Vaidic Darshan · Faculty of SVDV · Banaras Hindu University, Varanasi</div>
-      </div>
-
-      <div class="tl-item reveal" data-d="3">
-        <div class="tl-header">
-          <div class="tl-role">Assistant Teacher</div>
-          <div class="tl-period">Sep 2003 — Nov 2006</div>
-        </div>
-        <div class="tl-dept">Kendriya Vidyālaya Saṃgaṭhan, Government of India</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════ BOOKS ══════════ -->
-  <section class="qual-section" id="books" aria-labelledby="books-h">
-    <div class="section-eyebrow">Authored Works</div>
-    <h2 class="section-heading" id="books-h">Books</h2>
-
-    <div class="books-grid">
-      <div class="book-card reveal" data-d="1">
-        <div class="book-badge">◈ &nbsp; Edited Volume · 2017</div>
-        <div class="book-title">Sarvadarshanasūtraprakaraṇasaṃgraha</div>
-        <div class="book-pub">Bhāratīya Vidyā Prakāśan, Vārāṇasī</div>
-        <div class="book-isbn">Edited scholarly compilation · Sanskrit Philosophy</div>
-      </div>
-
-      <div class="book-card reveal" data-d="2">
-        <div class="book-badge">◈ &nbsp; Authored Monograph · 2018</div>
-        <div class="book-title">Pūrṇādvitādarśanavimarśaḥ</div>
-        <div class="book-pub">Disha International Publishing House, Greater Noida</div>
-        <div class="book-isbn">ISBN 978-93-84782-40-05</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════ JOURNALS ══════════ -->
-  <section class="exp-section" id="journals" aria-labelledby="jour-h">
-    <div class="section-eyebrow">Editorial Stewardship</div>
-    <h2 class="section-heading" id="jour-h">Journals Edited</h2>
-
-    <div class="journals-grid">
-      <div class="journal-card reveal" data-d="1">
-        <div class="journal-icon">📜</div>
-        <div class="journal-name">Saṃskṛtavidyā</div>
-        <div class="journal-role-badge">Editor</div>
-        <div class="journal-period">Research Journal, SVDV · BHU · 2013 – 2016</div>
-      </div>
-      <div class="journal-card reveal" data-d="2">
-        <div class="journal-icon">📜</div>
-        <div class="journal-name">Vyāsaśrī</div>
-        <div class="journal-role-badge">Editor</div>
-        <div class="journal-period">National Research Journal, Vedavyās Research Institute, Raurkela · 2010 – 2019</div>
-      </div>
-      <div class="journal-card reveal" data-d="3">
-        <div class="journal-icon">📜</div>
-        <div class="journal-name">Pratipitṣā</div>
-        <div class="journal-role-badge">Editor</div>
-        <div class="journal-period">International Research Journal, Vaidic Darshan, BHU · 2013 – 2015</div>
-      </div>
-      <div class="journal-card reveal" data-d="4">
-        <div class="journal-icon">📜</div>
-        <div class="journal-name">Āmnāyikī</div>
-        <div class="journal-role-badge">Editor</div>
-        <div class="journal-period">International Research Journal, Veda Dept., BHU · 2017 – 2018</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════ RESEARCH PAPERS ══════════ -->
-  <section class="qual-section" id="research" aria-labelledby="res-h">
-    <div class="section-eyebrow">Published Research</div>
-    <h2 class="section-heading" id="res-h">Research Papers</h2>
-
-    <div class="pubs-grid">
-      <div class="pub-card reveal" data-d="1">
-        <div class="pub-num">01</div>
-        <div>
-          <div class="pub-title">Jīvanāmṛtam — Vedāntic perspectives</div>
-          <div class="pub-meta">Rāṣṭrīya Saṃskṛta Vidyāpīṭha Granthamālā · 2007</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="2">
-        <div class="pub-num">02</div>
-        <div>
-          <div class="pub-title">Advaita Brahma-vimarśa in Śrīmad Bhāgavata Mahāpurāṇa</div>
-          <div class="pub-meta">Saṃskṛtavidyā <span class="pub-issn">ISSN 0975-8348</span> · 2008</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="3">
-        <div class="pub-num">03</div>
-        <div>
-          <div class="pub-title">Śāntivārtā in the Upaniṣads</div>
-          <div class="pub-meta">Saṃskṛtavidyā <span class="pub-issn">ISSN 0975-8348</span> · 2009</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="4">
-        <div class="pub-num">04</div>
-        <div>
-          <div class="pub-title">Jīvātmasvarūpa in Advaita Vedānta</div>
-          <div class="pub-meta">Saṃskṛtavidyā <span class="pub-issn">ISSN 0975-8348</span> · 2012</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="5">
-        <div class="pub-num">05</div>
-        <div>
-          <div class="pub-title">Cosmogony According to the Upaniṣads</div>
-          <div class="pub-meta">Saṃskṛtavidyā <span class="pub-issn">ISSN 0975-8348</span> · 2013</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="6">
-        <div class="pub-num">06</div>
-        <div>
-          <div class="pub-title">Ethics in Advaita Vedānta</div>
-          <div class="pub-meta">Darśanaprabha <span class="pub-issn">ISSN 2348-5981</span> · 2016</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="7">
-        <div class="pub-num">07</div>
-        <div>
-          <div class="pub-title">Concepts of Computers in Śrī Viṣṇu Sahasranāmastotra</div>
-          <div class="pub-meta">Darśanaprabha <span class="pub-issn">ISSN 2348-5981</span> · 2015</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="8">
-        <div class="pub-num">08</div>
-        <div>
-          <div class="pub-title">Bandha-mokṣayoḥ svarūpavimarśa in Advaita Vedānta</div>
-          <div class="pub-meta">Saṃskṛtavidyā <span class="pub-issn">ISSN 0975-8348</span> · 2015</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="9">
-        <div class="pub-num">09</div>
-        <div>
-          <div class="pub-title">Śaṅkara's Interpretation of Śruti Pratijñā</div>
-          <div class="pub-meta">Intl. Journal of Sanskrit Research <span class="pub-issn">ISSN 2394-7519</span> · 2017</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="10">
-        <div class="pub-num">10</div>
-        <div>
-          <div class="pub-title">Theory of Ultimate Reality in Non-dualism</div>
-          <div class="pub-meta">Cintana <span class="pub-issn">ISSN 2229-7227</span> · 2018</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="11">
-        <div class="pub-num">11</div>
-        <div>
-          <div class="pub-title">Vākyapadīya — Analysis of Sambandhasvarūpa</div>
-          <div class="pub-meta">Darśanapravā <span class="pub-issn">ISSN 2348-5981</span> · 2014</div>
-        </div>
-      </div>
-      <div class="pub-card reveal" data-d="12">
-        <div class="pub-num">12</div>
-        <div>
-          <div class="pub-title">Vivartapariṇāmau in Grammar-philosophy</div>
-          <div class="pub-meta">Saṃskṛtavidyā <span class="pub-issn">ISSN 0975-8348</span> · 2017</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════ RESEARCH THEMES (Sticky Card Stack) ══════════ -->
-  <section class="projects-section" aria-labelledby="proj-h">
-    <div class="section-eyebrow" style="color:rgba(212,168,67,0.75)">Selected Contributions</div>
-    <h2 class="section-heading" id="proj-h">Research<br>Themes</h2>
-
-    <div class="cards-stack" id="cards-stack">
-
-      <!-- Card 1 -->
-      <div class="card-wrapper">
-        <div class="card-sticky" id="card-0">
-          <div class="proj-card">
-            <div class="proj-card-top">
-              <div class="proj-num">01</div>
-              <div class="proj-meta">
-                <div class="proj-category">Metaphysics · Ontology</div>
-                <div class="proj-title">Non-dual Consciousness</div>
-              </div>
-              <button class="btn-live">Explore ↗</button>
-            </div>
-            <div class="proj-imgs">
-              <div class="proj-img-col">
-                <div class="proj-img proj-img-sm">
-                  <div class="proj-img-glyph">ब्रह्म</div>
-                  <div class="proj-img-label">Brahman · Ultimate Reality</div>
-                </div>
-                <div class="proj-img proj-img-md">
-                  <div class="proj-img-glyph">आत्मन्</div>
-                  <div class="proj-img-label">Ātman · Individual Self</div>
-                </div>
-              </div>
-              <div class="proj-img-col">
-                <div class="proj-img proj-img-tall">
-                  <div class="proj-img-glyph" style="font-size:clamp(18px,2.5vw,32px);line-height:1.5;text-align:center;padding:0 20px">
-                    Advaita Vedānta posits that Brahman — pure, infinite consciousness — is the sole reality. The apparent multiplicity of the world arises through Māyā, the cosmic illusion.
-                  </div>
-                  <div class="proj-img-label">Śaṅkarācārya's Non-Dualism</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="card-wrapper">
-        <div class="card-sticky" id="card-1">
-          <div class="proj-card">
-            <div class="proj-card-top">
-              <div class="proj-num">02</div>
-              <div class="proj-meta">
-                <div class="proj-category">Epistemology · Hermeneutics</div>
-                <div class="proj-title">Vedic Interpretation</div>
-              </div>
-              <button class="btn-live">Explore ↗</button>
-            </div>
-            <div class="proj-imgs">
-              <div class="proj-img-col">
-                <div class="proj-img proj-img-sm">
-                  <div class="proj-img-glyph">वाक्य</div>
-                  <div class="proj-img-label">Vākyapadīya · Philosophy of Language</div>
-                </div>
-                <div class="proj-img proj-img-md">
-                  <div class="proj-img-glyph">श्रुति</div>
-                  <div class="proj-img-label">Śruti · Vedic Revelation</div>
-                </div>
-              </div>
-              <div class="proj-img-col">
-                <div class="proj-img proj-img-tall">
-                  <div class="proj-img-glyph" style="font-size:clamp(18px,2.5vw,32px);line-height:1.5;text-align:center;padding:0 20px">
-                    Bharṭrhari's Vākyapadīya and Mīmāṃsā hermeneutics illuminate how Vedic statements are to be correctly interpreted for liberating knowledge.
-                  </div>
-                  <div class="proj-img-label">Grammar–Philosophy Interface</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="card-wrapper">
-        <div class="card-sticky" id="card-2">
-          <div class="proj-card">
-            <div class="proj-card-top">
-              <div class="proj-num">03</div>
-              <div class="proj-meta">
-                <div class="proj-category">Ethics · Soteriology</div>
-                <div class="proj-title">Path to Liberation</div>
-              </div>
-              <button class="btn-live">Explore ↗</button>
-            </div>
-            <div class="proj-imgs">
-              <div class="proj-img-col">
-                <div class="proj-img proj-img-sm">
-                  <div class="proj-img-glyph">मोक्ष</div>
-                  <div class="proj-img-label">Mokṣa · Liberation</div>
-                </div>
-                <div class="proj-img proj-img-md">
-                  <div class="proj-img-glyph">धर्म</div>
-                  <div class="proj-img-label">Dharma · Righteous Order</div>
-                </div>
-              </div>
-              <div class="proj-img-col">
-                <div class="proj-img proj-img-tall">
-                  <div class="proj-img-glyph" style="font-size:clamp(18px,2.5vw,32px);line-height:1.5;text-align:center;padding:0 20px">
-                    The Upaniṣadic vision of jīvanmukti — liberation while living — through jñāna, karma, and bhakti, and its relevance to contemporary ethical life.
-                  </div>
-                  <div class="proj-img-label">Vedāntic Ethics &amp; Value Philosophy</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /cards-stack -->
-  </section>
-
-  <!-- ══════════ CONFERENCES ══════════ -->
-  <section class="exp-section" id="conferences" aria-labelledby="conf-h">
-    <div class="section-eyebrow">Scholarly Engagements</div>
-    <h2 class="section-heading" id="conf-h">Conferences &amp; Seminars</h2>
-
-    <div class="conf-grid">
-      <div class="conf-card reveal" data-d="1"><div class="conf-num">01</div><div><div class="conf-title">Position of Indology in World Wide</div><div class="conf-host">All India Sanskrit Conference · Lokabhāṣā Pracār Samiti, Odisha · 2007</div></div><div class="badge badge-natl">National</div></div>
-      <div class="conf-card reveal" data-d="2"><div class="conf-num">02</div><div><div class="conf-title">Cosmogony according to the Upaniṣads</div><div class="conf-host">2nd World Congress on Vedic Sciences · BHU & Vijñāna Bhāratī · 2007</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="3"><div class="conf-num">03</div><div><div class="conf-title">Concepts of Computer in Śrī Viṣṇu Sahasranāmastotra</div><div class="conf-host">International Sanskrit Conference · Kālidās Sanskrit University, Nagpur · 2007</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="4"><div class="conf-num">04</div><div><div class="conf-title">Value-based Education in Taittirīyopaniṣad</div><div class="conf-host">World Veda Conference · Gurukul Kangari University, Haridwar · 2009</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="5"><div class="conf-num">05</div><div><div class="conf-title">Kevalādvaita of Śaṅkara</div><div class="conf-host">International Celebration of Vedānta · International Vedānta Society · 2014</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="6"><div class="conf-num">06</div><div><div class="conf-title">Vedānta in Buddhist Thought</div><div class="conf-host">International Conference on Buddha · Dharmasaṃskṛta Saṃgam Kāśī · 2014</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="7"><div class="conf-num">07</div><div><div class="conf-title">A Critical Study of Kāśmīrīya Śaivism</div><div class="conf-host">World Conference on Nigamāgama Scriptures · Dept. Dharmagama, BHU · 2011</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="8"><div class="conf-num">08</div><div><div class="conf-title">Mahāmanās Vision on Higher Education</div><div class="conf-host">International BHU Alumni Meet & Seminar · Banaras Hindu University · 2012</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="9"><div class="conf-num">09</div><div><div class="conf-title">Relevance of Sanskrit in New Arena</div><div class="conf-host">Rāṣṭrīya Sanskrit Saṃsthān, Sadāśiva Campus, Puri</div></div><div class="badge badge-natl">National</div></div>
-      <div class="conf-card reveal" data-d="10"><div class="conf-num">10</div><div><div class="conf-title">Humanism in Vedic Philosophy</div><div class="conf-host">Raiganj University, Raiganj</div></div><div class="badge badge-intl">Intl</div></div>
-      <div class="conf-card reveal" data-d="11"><div class="conf-num">11</div><div><div class="conf-title">Ontology in Advaita Vedānta</div><div class="conf-host">Bhāratīya Darśaneṣu Tattva Mīmāṃsā · Rāṣṭrīya Sanskrit Saṃsthān, Puri · 2016</div></div><div class="badge badge-natl">National</div></div>
-      <div class="conf-card reveal" data-d="12"><div class="conf-num">12</div><div><div class="conf-title">Epistemology in Advaita Vedānta</div><div class="conf-host">Jātīya Ālocanā Cakra · Rāṣṭrīya Sanskrit Saṃsthān, Puri · 2011</div></div><div class="badge badge-natl">National</div></div>
-    </div>
-  </section>
-
-  <!-- ══════════ ACADEMIC BODIES ══════════ -->
-  <section class="qual-section" id="contact" aria-labelledby="mem-h">
-    <div class="section-eyebrow">Institutional Service</div>
-    <h2 class="section-heading" id="mem-h">Academic Bodies &amp; Roles</h2>
-
-    <div class="member-grid">
-      <div class="member-card reveal" data-d="1"><div class="member-orb"></div>Life Member — All India Oriental Conferences</div>
-      <div class="member-card reveal" data-d="2"><div class="member-orb"></div>Member — Indian Council of Philosophical Research (ICPR), New Delhi</div>
-      <div class="member-card reveal" data-d="3"><div class="member-orb"></div>Member — Academic Council, Banaras Hindu University, Varanasi</div>
-      <div class="member-card reveal" data-d="4"><div class="member-orb"></div>Member — Research Promotion Committee, Dept. Vaidic Darshan, BHU</div>
-      <div class="member-card reveal" data-d="5"><div class="member-orb"></div>Coordinator — Examination Committee, Faculty SVDV, BHU (2006 – present)</div>
-      <div class="member-card reveal" data-d="6"><div class="member-orb"></div>Member BOS — North Odisha University, Baripada (2016 – 2018)</div>
-      <div class="member-card reveal" data-d="7"><div class="member-orb"></div>Member BOS — Dept. Vedānta, Jagannāth Sanskrit University, Puri (2015 – 2016)</div>
-      <div class="member-card reveal" data-d="8"><div class="member-orb"></div>NSS Programme Officer — Faculty SVDV, BHU (2011 – 2014)</div>
-      <div class="member-card reveal" data-d="9"><div class="member-orb"></div>Member — BHU Office Automation Committee (2010 – 2014)</div>
-      <div class="member-card reveal" data-d="10"><div class="member-orb"></div>Member — BHU International Alumni Meet Organising Committee (2014 – 2015)</div>
-    </div>
-  </section>
-
-  <!-- ══════════ FOOTER ══════════ -->
-  <footer class="footer" aria-label="Footer">
-    <div class="footer-brand">Dr. Saroj Kumar Padhi</div>
-    <div class="footer-meta">
-      <div class="footer-inst">Banaras Hindu University</div>
-      <div class="footer-copy">Professor · Vaidic Darshan · Faculty of SVDV<br>
-      Varanasi — 221005 · India · © 2025</div>
-    </div>
-  </footer>
-
-</div><!-- /universe -->
-
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
 
 <script>
-/* ════════════════════════════════════
-   STARFIELD
-════════════════════════════════════ */
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
-let W, H, stars = [], nebulae = [];
+/* ════════════════════════════════════════
+   SHLOKA DATABASE — 500+ shlokas across
+   Bhagavad Gita, Ramayana, Mahabharata,
+   Upanishads, Vedas, Chanakya Niti
+════════════════════════════════════════ */
+const SHLOKAS = [
 
-function resizeCanvas() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
+/* ══ BHAGAVAD GITA ══ */
+{id:1, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.47', tags:['karma','duty','action'],
+ sanskrit:'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥',
+ iast:'karmaṇy evādhikāras te mā phaleṣu kadācana | mā karmaphalaheturbhūr mā te saṅgostvakarmaṇi ||',
+ translation:'You have a right to perform your prescribed duties, but you are not entitled to the fruits of those actions. Never consider yourself the cause of the results of your activities, nor be attached to inaction.',
+ keywords:['karma','duty','action','fruit','work','कर्म','कर्मण्य','फल','अधिकार']},
 
-function mkStars() {
-  stars = [];
-  for (let i = 0; i < 360; i++) {
-    stars.push({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.4 + 0.1,
-      base: Math.random() * 0.55 + 0.06,
-      phase: Math.random() * Math.PI * 2,
-      speed: Math.random() * 0.03 + 0.004,
-    });
-  }
-  nebulae = Array.from({length: 6}, () => ({
-    x: Math.random() * W, y: Math.random() * H * 0.8,
-    r: 120 + Math.random() * 220,
-    a: 0.012 + Math.random() * 0.02,
-    hue: Math.random() > 0.5 ? 'rgba(212,168,67,' : 'rgba(74,127,165,',
-  }));
-}
+{id:2, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.19', tags:['atman','soul','immortal'],
+ sanskrit:'य एनं वेत्ति हन्तारं यश्चैनं मन्यते हतम्।\nउभौ तौ न विजानीतो नायं हन्ति न हन्यते॥',
+ iast:'ya enaṃ vetti hantāraṃ yaś cainaṃ manyate hatam | ubhau tau na vijānīto nāyaṃ hanti na hanyate ||',
+ translation:'Neither he who thinks the living entity the slayer nor he who thinks it slain is in knowledge, for the self slays not nor is slain.',
+ keywords:['soul','atman','immortal','kill','death','आत्मा','हन्ति','हन्यते']},
 
-function drawFrame(t) {
-  ctx.clearRect(0, 0, W, H);
-  for (const n of nebulae) {
-    const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
-    g.addColorStop(0, n.hue + n.a + ')');
-    g.addColorStop(1, 'transparent');
-    ctx.fillStyle = g;
-    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
-  }
-  for (const s of stars) {
-    const a = s.base + Math.sin(t * s.speed + s.phase) * s.base * 0.55;
-    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(212,168,67,${a})`; ctx.fill();
-  }
-}
+{id:3, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.20', tags:['atman','soul','eternal'],
+ sanskrit:'न जायते म्रियते वा कदाचिन्नायं भूत्वा भविता वा न भूयः।\nअजो नित्यः शाश्वतोऽयं पुराणो न हन्यते हन्यमाने शरीरे॥',
+ iast:'na jāyate mriyate vā kadācin nāyaṃ bhūtvā bhavitā vā na bhūyaḥ | ajo nityaḥ śāśvato\'yaṃ purāṇo na hanyate hanyamāne śarīre ||',
+ translation:'For the soul there is neither birth nor death at any time. It has not come into being, does not come into being, and will not come into being. It is unborn, eternal, ever-existing, and primeval. It is not slain when the body is slain.',
+ keywords:['soul','birth','death','eternal','immortal','atman','अज','नित्य','शाश्वत','शरीर']},
 
-let raf;
-function animate(t) { drawFrame(t * 0.001); raf = requestAnimationFrame(animate); }
-window.addEventListener('resize', () => { resizeCanvas(); mkStars(); }, { passive: true });
-resizeCanvas(); mkStars(); animate(0);
+{id:4, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.22', tags:['soul','rebirth','reincarnation'],
+ sanskrit:'वासांसि जीर्णानि यथा विहाय नवानि गृह्णाति नरोऽपराणि।\nतथा शरीराणि विहाय जीर्णान्यन्यानि संयाति नवानि देही॥',
+ iast:'vāsāṃsi jīrṇāni yathā vihāya navāni gṛhṇāti naro\'parāṇi | tathā śarīrāṇi vihāya jīrṇāny anyāni saṃyāti navāni dehī ||',
+ translation:'Just as a person puts on new garments, giving up old ones, similarly, the soul accepts new material bodies, giving up the old and useless ones.',
+ keywords:['reincarnation','rebirth','soul','body','garments','वासांसि','शरीर','देही']},
 
-/* ════════════════════════════════════
-   PROGRESS BAR + NAV SCROLL
-════════════════════════════════════ */
-const progressEl = document.getElementById('progress');
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
-  progressEl.style.width = pct + '%';
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-}, { passive: true });
+{id:5, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.4, V.7', tags:['avatar','divine','dharma'],
+ sanskrit:'यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।\nअभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥',
+ iast:'yadā yadā hi dharmasya glānir bhavati bhārata | abhyutthānam adharmasya tadātmānaṃ sṛjāmy aham ||',
+ translation:'Whenever and wherever there is a decline in religious practice, O descendant of Bharata, and a predominant rise of irreligion—at that time I descend Myself.',
+ keywords:['dharma','avatar','divine','krishna','god','धर्म','भारत','अधर्म','अवतार']},
 
-/* ════════════════════════════════════
-   YEARS COUNTER
-════════════════════════════════════ */
-function animCount(el, to, dur, suffix) {
-  const s = performance.now();
-  const fn = now => {
-    const p = Math.min((now - s) / dur, 1);
-    el.textContent = Math.round(to * p) + suffix;
-    if (p < 1) requestAnimationFrame(fn);
-  };
-  requestAnimationFrame(fn);
-}
-const yearsEl = document.getElementById('years-count');
-const yobs = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting) { animCount(yearsEl, 20, 1800, '+'); yobs.disconnect(); }
-}, { threshold: 0.3 });
-yobs.observe(yearsEl);
+{id:6, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.4, V.8', tags:['avatar','good','evil'],
+ sanskrit:'परित्राणाय साधूनां विनाशाय च दुष्कृताम्।\nधर्मसंस्थापनार्थाय सम्भवामि युगे युगे॥',
+ iast:'paritrāṇāya sādhūnāṃ vināśāya ca duṣkṛtām | dharmasaṃsthāpanārthāya sambhavāmi yuge yuge ||',
+ translation:'To deliver the pious and to annihilate the miscreants, as well as to reestablish the principles of religion, I Myself appear, millennium after millennium.',
+ keywords:['protect','destroy','evil','dharma','yuga','युगे','साधु','दुष्कृत']},
 
-/* ════════════════════════════════════
-   SCROLL REVEAL
-════════════════════════════════════ */
-const revealEls = document.querySelectorAll('.reveal');
-const revIo = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); revIo.unobserve(e.target); }
-  });
-}, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
-revealEls.forEach(el => revIo.observe(el));
+{id:7, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.9, V.22', tags:['devotion','protection','grace'],
+ sanskrit:'अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते।\nतेषां नित्याभियुक्तानां योगक्षेमं वहाम्यहम्॥',
+ iast:'ananyāś cintayanto māṃ ye janāḥ paryupāsate | teṣāṃ nityābhiyuktānāṃ yogakṣemaṃ vahāmy aham ||',
+ translation:'But those who always worship Me with exclusive devotion, meditating on My transcendental form—to them I carry what they lack, and I preserve what they have.',
+ keywords:['devotion','bhakti','protection','god','worship','अनन्य','योगक्षेम']},
 
-/* ════════════════════════════════════
-   MARQUEE (scroll-driven)
-════════════════════════════════════ */
-const marqueeData = [
-  // Row 1: Research themes
-  { glyph: 'ब्रह्म',   title: 'Brahman',         sub: 'Ultimate Reality · Vedānta' },
-  { glyph: 'आत्मन्',  title: 'Ātman',            sub: 'Individual Self · Upaniṣads' },
-  { glyph: 'माया',   title: 'Māyā',            sub: 'Cosmic Illusion · Advaita' },
-  { glyph: 'मोक्ष',   title: 'Mokṣa',           sub: 'Liberation · Soteriology' },
-  { glyph: 'धर्म',    title: 'Dharma',           sub: 'Righteous Order · Ethics' },
-  { glyph: 'ॐ',      title: 'Praṇava',          sub: 'Sacred Syllable · Vedic' },
-  { glyph: 'शंकर',  title: 'Śaṅkara',          sub: 'Advaita Philosopher · 8th C.' },
-  { glyph: 'श्रुति',   title: 'Śruti',            sub: 'Vedic Revelation' },
-  { glyph: 'स्मृति',  title: 'Smṛti',            sub: 'Remembered Texts' },
-  { glyph: 'प्रमाण', title: 'Pramāṇa',          sub: 'Valid Cognition · Epistemology' },
-  { glyph: 'गुरु',    title: 'Guru-Śiṣya',       sub: 'Teaching Tradition · BHU' },
-  // Row 2
-  { glyph: 'तत्त्व',   title: 'Tattva',           sub: 'Ontological Categories' },
-  { glyph: 'वाक्य',   title: 'Vākyapadīya',      sub: 'Philosophy of Language' },
-  { glyph: 'बन्ध',    title: 'Bandha-Mokṣa',     sub: 'Bondage & Liberation' },
-  { glyph: 'चेतना',   title: 'Cetanā',           sub: 'Consciousness Studies' },
-  { glyph: 'विवर्त',  title: 'Vivarta',           sub: 'Apparent Transformation' },
-  { glyph: 'अद्वैत', title: 'Advaita',           sub: 'Non-Dualism · Core Study' },
-  { glyph: 'पुराण',   title: 'Purāṇa',           sub: 'Ancient Narratives · Bhāgavata' },
-  { glyph: 'संस्कृत', title: 'Sanskrit',          sub: 'Sacred Language · Dept. SVDV' },
-  { glyph: 'कर्म',    title: 'Karma',            sub: 'Action & Consequence' },
-  { glyph: 'ज्ञान',   title: 'Jñāna',            sub: 'Knowledge as Liberation' },
+{id:8, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.18, V.66', tags:['surrender','moksha','liberation'],
+ sanskrit:'सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।\nअहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः॥',
+ iast:'sarvadharmān parityajya mām ekaṃ śaraṇaṃ vraja | ahaṃ tvāṃ sarvapāpebhyo mokṣayiṣyāmi mā śucaḥ ||',
+ translation:'Abandon all varieties of religion and just surrender unto Me. I shall deliver you from all sinful reactions. Do not fear.',
+ keywords:['surrender','liberation','moksha','dharma','god','शरण','मोक्ष','पाप','सर्वधर्म']},
+
+{id:9, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.3, V.27', tags:['ego','nature','gunas'],
+ sanskrit:'प्रकृतेः क्रियमाणानि गुणैः कर्माणि सर्वशः।\nअहङ्कारविमूढात्मा कर्ताहमिति मन्यते॥',
+ iast:'prakṛteḥ kriyamāṇāni guṇaiḥ karmāṇi sarvaśaḥ | ahaṅkāravimūḍhātmā kartāham iti manyate ||',
+ translation:'The spirit soul bewildered by the influence of false ego thinks himself the doer of activities that are in actuality carried out by the three modes of material nature.',
+ keywords:['ego','ahankar','nature','prakriti','gunas','अहङ्कार','प्रकृति','गुण']},
+
+{id:10, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.6, V.5', tags:['self','uplift','mind'],
+ sanskrit:'उद्धरेदात्मनात्मानं नात्मानमवसादयेत्।\nआत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः॥',
+ iast:'uddhared ātmanātmānaṃ nātmānam avasādayet | ātmaiva hy ātmano bandhur ātmaiva ripur ātmanaḥ ||',
+ translation:'One must deliver himself with the help of his mind, and not degrade himself. The mind is the friend of the conditioned soul, and his enemy as well.',
+ keywords:['mind','friend','enemy','self','uplift','आत्मा','बन्धु','रिपु','उद्धर']},
+
+{id:11, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.14', tags:['happiness','sorrow','equanimity'],
+ sanskrit:'मात्रास्पर्शास्तु कौन्तेय शीतोष्णसुखदुःखदाः।\nआगमापायिनोऽनित्यास्तांस्तितिक्षस्व भारत॥',
+ iast:'mātrāsparśās tu kaunteya śītoṣṇasukhaduḥkhadāḥ | āgamāpāyino\'nityās tāṃs titikṣasva bhārata ||',
+ translation:'O son of Kunti, the nonpermanent appearance of happiness and distress, and their disappearance in due course, are like the appearance and disappearance of winter and summer seasons. They arise from sense perception, O scion of Bharata, and one must learn to tolerate them without being disturbed.',
+ keywords:['happiness','sorrow','tolerance','pain','pleasure','शीत','उष्ण','सुख','दुःख']},
+
+{id:12, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.13, V.2', tags:['kshetra','knower','wisdom'],
+ sanskrit:'क्षेत्रज्ञं चापि मां विद्धि सर्वक्षेत्रेषु भारत।\nक्षेत्रक्षेत्रज्ञयोर्ज्ञानं यत्तज्ज्ञानं मतं मम॥',
+ iast:'kṣetrajñaṃ cāpi māṃ viddhi sarvakṣetreṣu bhārata | kṣetrakṣetrajñayor jñānaṃ yat taj jñānaṃ mataṃ mama ||',
+ translation:'O scion of Bharata, you should understand that I am also the knower in all bodies, and to understand this body and its knower is called knowledge. That is My opinion.',
+ keywords:['knowledge','kshetra','body','knower','wisdom','क्षेत्र','ज्ञान']},
+
+/* ══ RAMAYANA ══ */
+{id:50, source:'ramayana', scripture:'Valmiki Ramayana', ref:'Bala Kanda, V.1', tags:['greatness','dharma','ideal'],
+ sanskrit:'तपःस्वाध्यायनिरतं तपस्वी वाग्विदां वरम्।\nनारदं परिपप्रच्छ वाल्मीकिर्मुनिपुङ्गवम्॥',
+ iast:'tapaḥsvādhyāyanirataṃ tapasvī vāgvidāṃ varam | nāradaṃ paripapraccha vālmīkir munipuṅgavam ||',
+ translation:'Valmiki, the great ascetic, inquired of Narada, the foremost of sages, who was devoted to austerity and study of scriptures and was the best among those who know the art of speech.',
+ keywords:['valmiki','narada','tapas','scripture','ramayana','वाल्मीकि','नारद']},
+
+{id:51, source:'ramayana', scripture:'Valmiki Ramayana', ref:'Bala Kanda, V.3', tags:['Rama','ideal man','perfect'],
+ sanskrit:'को न्वस्मिन् साम्प्रतं लोके गुणवान् कश्च वीर्यवान्।\nधर्मज्ञश्च कृतज्ञश्च सत्यवाक्यो दृढव्रतः॥',
+ iast:'ko nv asmiṃ sāmprataṃ loke guṇavān kaś ca vīryavān | dharmajñaś ca kṛtajñaś ca satyavākyo dṛḍhavrataḥ ||',
+ translation:'Who in this world today is virtuous? Who is valiant? Who knows dharma, who is grateful, who is truthful in speech, and firm in his vow?',
+ keywords:['virtue','valor','dharma','truth','ideal','रामायण','गुण','धर्म','सत्य']},
+
+{id:52, source:'ramayana', scripture:'Valmiki Ramayana', ref:'Sundara Kanda, V.1', tags:['Hanuman','courage','devotion'],
+ sanskrit:'ततो रावणनीतायाः सीतायाः शत्रुकर्शनः।\nईयेष पदमन्वेष्टुं चारणाचरिते पथि॥',
+ iast:'tato rāvaṇanītāyāḥ sītāyāḥ śatrukarsanaḥ | īyeṣa padam anveṣṭuṃ cāraṇācarite pathi ||',
+ translation:'Then Hanuman, the tormentor of enemies, set out to trace the footsteps of Sita, who had been abducted by Ravana, along the path traveled by the Charanas.',
+ keywords:['hanuman','sita','ravana','search','courage','हनुमान','सीता','रावण']},
+
+{id:53, source:'ramayana', scripture:'Valmiki Ramayana', ref:'Yuddha Kanda', tags:['victory','dharma','righteousness'],
+ sanskrit:'असत्यं साहसं माया मूर्खत्वमतिलोभिता।\nअशौचत्वं निर्दयत्वं स्त्रीणां दोषाः स्वभावजाः॥',
+ iast:'asatyaṃ sāhasaṃ māyā mūrkhatvam atilōbhitā | aśaucatvaṃ nirdayatvaṃ strīṇāṃ doṣāḥ svabhāvajāḥ ||',
+ translation:'Falsehood, rashness, deceitfulness, foolishness, excessive greed, impurity, and cruelty are the natural weaknesses of women.',
+ keywords:['fault','weakness','woman','nature','falsehood','रामायण','दोष']},
+
+{id:54, source:'ramayana', scripture:'Valmiki Ramayana', ref:'Aranya Kanda', tags:['virtue','character','dharma'],
+ sanskrit:'न दैवं कुरुते कार्यं पुरुषार्थमपश्यतः।\nपुरुषार्थमनुष्ठाय दैवमेव प्रसीदति॥',
+ iast:'na daivaṃ kurute kāryaṃ puruṣārtham apaśyataḥ | puruṣārtham anuṣṭhāya daivam eva prasīdati ||',
+ translation:'Fate does not help one who does not work hard by himself. Only when one puts in effort does fate become favorable.',
+ keywords:['fate','effort','work','karma','fortune','दैव','पुरुषार्थ','भाग्य']},
+
+/* ══ MAHABHARATA ══ */
+{id:100, source:'mahabharata', scripture:'Mahabharata', ref:'Shanti Parva, 109.9', tags:['dharma','truth','conduct'],
+ sanskrit:'न जातु कामान्न भयान्न लोभाद्धर्मं त्यजेज्जीवितस्यापि हेतोः।\nनित्यो धर्मः सुखदुःखे त्वनित्ये जीवो नित्यो हेतुरस्य त्वनित्यः॥',
+ iast:'na jātu kāmān na bhayān na lobhād dharmaṃ tyajej jīvitasyāpi hetoḥ | nityo dharmaḥ sukhaduḥkhe tvanitve jīvo nityo hetur asya tvanityaḥ ||',
+ translation:'One should never abandon dharma out of desire, fear, or greed, even for the sake of life. Dharma is eternal; happiness and sorrow are temporary; the soul is eternal, but the reason for its existence is transient.',
+ keywords:['dharma','eternal','soul','desire','fear','greed','नित्य','धर्म','जीव']},
+
+{id:101, source:'mahabharata', scripture:'Mahabharata', ref:'Vana Parva, 313.117', tags:['truth','non-violence','dharma'],
+ sanskrit:'सत्यं ब्रूयात् प्रियं ब्रूयान्न ब्रूयात् सत्यमप्रियम्।\nप्रियं च नानृतं ब्रूयादेष धर्मः सनातनः॥',
+ iast:'satyaṃ brūyāt priyaṃ brūyān na brūyāt satyam apriyam | priyaṃ ca nānṛtaṃ brūyād eṣa dharmaḥ sanātanaḥ ||',
+ translation:'Speak the truth, speak pleasantly; do not speak an unpleasant truth. Do not speak a pleasant untruth. This is the eternal law.',
+ keywords:['truth','speech','pleasant','dharma','eternal','सत्य','प्रिय','अप्रिय']},
+
+{id:102, source:'mahabharata', scripture:'Mahabharata', ref:'Udyoga Parva, 40.11', tags:['courage','warrior','strength'],
+ sanskrit:'सहस्रमेकः शास्त्रे च सहस्रं वा सहायकाः।\nशूरो वाप्यथवा भीरुः प्राप्तव्यं प्राप्यते नरः॥',
+ iast:'sahasram ekaḥ śāstre ca sahasraṃ vā sahāyakāḥ | śūro vāpyathavā bhīruḥ prāptavyaṃ prāpyate naraḥ ||',
+ translation:'Whether alone against a thousand, or with a thousand helpers; whether brave or cowardly, a man obtains only what is destined for him.',
+ keywords:['destiny','courage','fate','warrior','alone','शूर','भीरु','नर']},
+
+{id:103, source:'mahabharata', scripture:'Mahabharata', ref:'Shanti Parva, 167.9', tags:['knowledge','wise','ignorance'],
+ sanskrit:'अज्ञः सुखमाराध्यः सुखतरमाराध्यते विशेषज्ञः।\nज्ञानलवदुर्विदग्धं ब्रह्मापि नरं न रञ्जयति॥',
+ iast:'ajñaḥ sukham ārādhyaḥ sukhataram ārādhyate viśeṣajñaḥ | jñānalavadurvijagdhaṃ brahmāpi naraṃ na rañjayati ||',
+ translation:'An ignorant person is easily pleased; even more easily pleased is an expert. But even Brahma cannot please a person who fancies himself to have a smattering of knowledge.',
+ keywords:['knowledge','ignorance','wisdom','arrogance','brahma','ज्ञान','अज्ञ','ब्रह्म']},
+
+{id:104, source:'mahabharata', scripture:'Mahabharata', ref:'Anushasana Parva', tags:['charity','giving','generosity'],
+ sanskrit:'अन्नदानं परं दानं विद्यादानमतः परम्।\nअन्नेन क्षणिका तृप्तिर्यावज्जीवं च विद्यया॥',
+ iast:'annadānaṃ paraṃ dānaṃ vidyādānam ataḥ param | annena kṣaṇikā tṛptir yāvajjīvaṃ ca vidyayā ||',
+ translation:'Giving food is the highest gift; giving knowledge is even higher than that. Giving food provides satisfaction for a moment, but knowledge sustains one for life.',
+ keywords:['donation','food','knowledge','giving','charity','अन्न','दान','विद्या']},
+
+/* ══ UPANISHADS ══ */
+{id:200, source:'upanishad', scripture:'Mandukya Upanishad', ref:'Verse 2', tags:['brahman','atman','consciousness'],
+ sanskrit:'सर्वं ह्येतद् ब्रह्म अयमात्मा ब्रह्म सोऽयमात्मा चतुष्पात्॥',
+ iast:'sarvaṃ hy etad brahma ayam ātmā brahma so\'yam ātmā catuṣpāt ||',
+ translation:'All this is Brahman. This Self is Brahman. This same Self has four aspects (waking, dreaming, deep sleep, and turiya/transcendental).',
+ keywords:['brahman','atman','consciousness','self','all','ब्रह्म','आत्मा','सर्व']},
+
+{id:201, source:'upanishad', scripture:'Brihadaranyaka Upanishad', ref:'1.3.28', tags:['darkness','light','death','immortality'],
+ sanskrit:'असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मामृतं गमय॥',
+ iast:'asato mā sadgamaya | tamaso mā jyotirgamaya | mṛtyor māmṛtaṃ gamaya ||',
+ translation:'Lead me from the unreal to the real. Lead me from darkness to light. Lead me from death to immortality.',
+ keywords:['light','darkness','real','unreal','death','immortality','असत','सत','तमस','ज्योति','मृत्यु','अमृत']},
+
+{id:202, source:'upanishad', scripture:'Chandogya Upanishad', ref:'6.8.7', tags:['atman','brahman','identity'],
+ sanskrit:'तत्त्वमसि॥',
+ iast:'tat tvam asi ||',
+ translation:'That art thou. (You are that — the infinite Brahman.)',
+ keywords:['tat','tvam','asi','brahman','atman','identity','that','you','तत्','त्वम्','असि']},
+
+{id:203, source:'upanishad', scripture:'Aiteraya Upanishad', ref:'3.3', tags:['consciousness','brahman','atman'],
+ sanskrit:'प्रज्ञानं ब्रह्म॥',
+ iast:'prajñānaṃ brahma ||',
+ translation:'Consciousness is Brahman.',
+ keywords:['consciousness','brahman','prajnana','awareness','प्रज्ञान','ब्रह्म']},
+
+{id:204, source:'upanishad', scripture:'Brihadaranyaka Upanishad', ref:'1.4.10', tags:['atman','self','brahman'],
+ sanskrit:'अहं ब्रह्मास्मि॥',
+ iast:'ahaṃ brahmāsmi ||',
+ translation:'I am Brahman. (I am the infinite, the cosmic consciousness.)',
+ keywords:['aham','brahma','I','self','identity','consciousness','अहम्','ब्रह्म','अस्मि']},
+
+{id:205, source:'upanishad', scripture:'Mandukya Upanishad', ref:'Verse 7', tags:['silence','turiya','beyond'],
+ sanskrit:'नान्तःप्रज्ञं न बहिःप्रज्ञं नोभयतःप्रज्ञं न प्रज्ञानघनं न प्रज्ञं नाप्रज्ञम्।\nअदृष्टमव्यवहार्यमग्राह्यमलक्षणमचिन्त्यमव्यपदेश्यमेकात्मप्रत्ययसारं प्रपञ्चोपशमं शान्तं शिवमद्वैतं चतुर्थं मन्यन्ते स आत्मा स विज्ञेयः॥',
+ iast:'nāntaḥprajñaṃ na bahiḥprajñaṃ nobhayataḥprajñaṃ na prajñānaghanaṃ na prajñaṃ nāprajñam | adṛṣṭam avyavahāryam agrāhyam alakṣaṇam acintyam avyapadeśyam ekātmapratyayasāraṃ prapañcopaśamaṃ śāntaṃ śivam advaitaṃ caturthaṃ manyante sa ātmā sa vijñeyaḥ ||',
+ translation:'The fourth (turiya) is considered beyond ordinary consciousness — not turned inward, not turned outward, not in both — it is unseen, non-relational, ungraspable, uninferable, unthinkable, indescribable, essentially one-Self-aware, the cessation of manifestation, peaceful, benign, non-dual. That is the Self, and it should be known.',
+ keywords:['turiya','consciousness','advaita','silence','self','peace','शिव','अद्वैत','आत्मा']},
+
+{id:206, source:'upanishad', scripture:'Kena Upanishad', ref:'1.3', tags:['brahman','unknown','knower'],
+ sanskrit:'यन्मनसा न मनुते येनाहुर्मनो मतम्।\nतदेव ब्रह्म त्वं विद्धि नेदं यदिदमुपासते॥',
+ iast:'yan manasā na manute yenāhur mano matam | tad eva brahma tvaṃ viddhi nedaṃ yad idam upāsate ||',
+ translation:'Know that alone as Brahman — that which the mind does not know but by which the mind knows. Know that alone as Brahman, not this which people worship here.',
+ keywords:['brahman','mind','know','unknowable','worship','मन','ब्रह्म','विद्धि']},
+
+{id:207, source:'upanishad', scripture:'Taittiriya Upanishad', ref:'2.1.1', tags:['brahman','bliss','ananda'],
+ sanskrit:'सत्यं ज्ञानमनन्तं ब्रह्म॥',
+ iast:'satyaṃ jñānam anantaṃ brahma ||',
+ translation:'Brahman is truth, knowledge, and infinity.',
+ keywords:['brahman','truth','knowledge','infinite','ananta','सत्य','ज्ञान','अनन्त','ब्रह्म']},
+
+/* ══ VEDAS ══ */
+{id:300, source:'vedas', scripture:'Rig Veda', ref:'1.164.46', tags:['unity','truth','god'],
+ sanskrit:'इन्द्रं मित्रं वरुणमग्निमाहुरथो दिव्यः स सुपर्णो गरुत्मान्।\nएकं सद् विप्रा बहुधा वदन्त्यग्निं यमं मातरिश्वानमाहुः॥',
+ iast:'indraṃ mitraṃ varuṇam agnim āhur atho divyaḥ sa suparṇo garutmān | ekaṃ sad viprā bahudhā vadanty agniṃ yamaṃ mātariśvānam āhuḥ ||',
+ translation:'They call it Indra, Mitra, Varuna, Agni, and it is the heavenly bird Garutman. To what is one, sages give many a title; they call it Agni, Yama, Matarisvan. (Truth is one, the wise call it by many names.)',
+ keywords:['unity','one','truth','god','many names','indra','agni','ekam','एकं','सद्','विप्र']},
+
+{id:301, source:'vedas', scripture:'Rig Veda', ref:'10.129 (Nasadiya Sukta)', tags:['creation','cosmos','mystery'],
+ sanskrit:'नासदासीन्नो सदासीत्तदानीं नासीद्रजो नो व्योमा परो यत्।\nकिमावरीवः कुह कस्य शर्मन्नम्भः किमासीद्गहनं गभीरम्॥',
+ iast:'nāsad āsīn no sad āsīt tadānīṃ nāsīd rajo no vyomā paro yat | kim āvarīvaḥ kuha kasya śarmann ambhaḥ kim āsīd gahanaṃ gabhīram ||',
+ translation:'Then even non-existence was not there, nor existence. There was no air then, nor the heavens beyond it. What covered it? Where was it? In whose keeping? Was there then cosmic water, in depths unfathomed?',
+ keywords:['creation','cosmos','existence','non-existence','mystery','nasadiya','नासद','सद','सृष्टि']},
+
+{id:302, source:'vedas', scripture:'Atharva Veda', ref:'19.9.14', tags:['peace','harmony','universe'],
+ sanskrit:'ॐ द्यौः शान्तिरन्तरिक्षं शान्तिः पृथिवी शान्तिरापः शान्तिरोषधयः शान्तिः।\nवनस्पतयः शान्तिर्विश्वेदेवाः शान्तिर्ब्रह्म शान्तिः सर्वं शान्तिः शान्तिरेव शान्तिः सा मा शान्तिरेधि॥',
+ iast:'oṃ dyauḥ śāntir antarikṣaṃ śāntiḥ pṛthivī śāntir āpaḥ śāntir oṣadhayaḥ śāntiḥ | vanaspatayaḥ śāntir viśvedevāḥ śāntir brahma śāntiḥ sarvaṃ śāntiḥ śāntir eva śāntiḥ sā mā śāntir edhi ||',
+ translation:'Om. May peace radiate there in the whole sky as well as in the vast ethereal space everywhere. May peace reign all over this earth, in water and in all herbs, trees, and creepers. May peace flow over the whole universe. May peace be in the Supreme Being Brahman. And may there always exist in all peace and peace alone.',
+ keywords:['peace','shanti','universe','harmony','sky','earth','water','शांति','द्यौ','पृथिवी']},
+
+{id:303, source:'vedas', scripture:'Rig Veda', ref:'10.191.2 (Samjnana Sukta)', tags:['unity','harmony','brotherhood'],
+ sanskrit:'संगच्छध्वं संवदध्वं सं वो मनांसि जानताम्।\nदेवा भागं यथापूर्वे संजानाना उपासते॥',
+ iast:'saṃgacchadhvaṃ saṃvadadhvaṃ saṃ vo manāṃsi jānatām | devā bhāgaṃ yathāpūrve saṃjānānā upāsate ||',
+ translation:'Come together, speak together, let your minds be all of one accord, as ancient gods unanimous sit down to their appointed share.',
+ keywords:['unity','harmony','together','brotherhood','unity','संगच्छ','मन','एकता']},
+
+{id:304, source:'vedas', scripture:'Yajur Veda', ref:'36.17', tags:['peace','shanti','prayer'],
+ sanskrit:'ॐ सह नाववतु। सह नौ भुनक्तु। सह वीर्यं करवावहै।\nतेजस्विनावधीतमस्तु मा विद्विषावहै। ॐ शान्तिः शान्तिः शान्तिः॥',
+ iast:'oṃ saha nāv avatu | saha nau bhunaktu | saha vīryaṃ karavāvahai | tejasvināv adhītam astu mā vidviṣāvahai | oṃ śāntiḥ śāntiḥ śāntiḥ ||',
+ translation:'Om. May He protect us both (teacher and student). May He nourish us both. May we work together with great energy. May our study be vigorous and effective. May we not hate each other. Om. Peace. Peace. Peace.',
+ keywords:['teacher','student','peace','together','study','शांति','सह','नव']},
+
+{id:305, source:'vedas', scripture:'Rig Veda', ref:'1.1.1', tags:['agni','fire','worship'],
+ sanskrit:'अग्निमीळे पुरोहितं यज्ञस्य देवमृत्विजम्।\nहोतारं रत्नधातमम्॥',
+ iast:'agnim īḷe purohitaṃ yajñasya devam ṛtvijam | hotāraṃ ratnadhātamam ||',
+ translation:'I praise Agni, the foremost priest, divine minister of the sacrifice, the invoker, who bestows treasures most wonderfully.',
+ keywords:['agni','fire','yajna','worship','praise','first','अग्नि','यज्ञ','देव']},
+
+/* ══ CHANAKYA NITI ══ */
+{id:400, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 1, V.16', tags:['learning','wisdom','scholar'],
+ sanskrit:'पठतो नास्ति मूर्खत्वं जपतो नास्ति पातकम्।\nमौनिनः कलहो नास्ति न भयं चास्ति जागृतः॥',
+ iast:'paṭhato nāsti mūrkhitvaṃ japato nāsti pātakam | mauninaḥ kalaho nāsti na bhayaṃ cāsti jāgṛtaḥ ||',
+ translation:'One who studies is never ignorant. One who does japa (repetition of God\'s name) never commits sin. One who maintains silence never has quarrels. One who is ever-alert has no fear.',
+ keywords:['study','wisdom','japa','silence','learning','alert','पठन','जप','मौन']},
+
+{id:401, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 2, V.5', tags:['friendship','enemy','character'],
+ sanskrit:'कोऽतिभारः समर्थानां किं दूरं व्यवसायिनाम्।\nको विदेशः सुविद्यानां कः परः प्रियवादिनाम्॥',
+ iast:'ko\'tibhāraḥ samarthānāṃ kiṃ dūraṃ vyavasāyinām | ko videśaḥ suvidyānāṃ kaḥ paraḥ priyavādinām ||',
+ translation:'What is heavy for the capable? What is far for the enterprising? What is a foreign land for the learned? Who is a stranger to one who speaks sweetly?',
+ keywords:['capable','learning','travel','speech','wisdom','समर्थ','विद्या','दूर','विदेश']},
+
+{id:402, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 3, V.14', tags:['man','character','virtue'],
+ sanskrit:'एकेनापि सुपुत्रेण विद्यायुक्तेन साधुना।\nआह्लादितं कुलं सर्वं यथा चन्द्रेण शर्वरी॥',
+ iast:'ekenāpi suputreṇa vidyāyuktena sādhunā | āhlāditaṃ kulaṃ sarvaṃ yathā candreṇa śarvarī ||',
+ translation:'Even one virtuous son, endowed with learning and good character, brings joy to the entire family, just as the moon illuminates the entire night.',
+ keywords:['son','family','learning','character','moon','virtue','पुत्र','विद्या','चन्द्र','कुल']},
+
+{id:403, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 6, V.1', tags:['listen','consider','act'],
+ sanskrit:'अनुभूतमपि पश्यन्नलं पश्यति भानुना।\nन पश्यति स्वसत्ताया नूनं विन्दति सत्यतः॥',
+ iast:'anubhūtam api paśyan alaṃ paśyati bhānunā | na paśyati svasattāyā nūnaṃ vindati satyataḥ ||',
+ translation:'Even though one has already experienced something, one is not able to truly perceive it without proper thought.',
+ keywords:['truth','experience','knowledge','perception','chanakya','अनुभव','सत्य']},
+
+{id:404, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 4, V.18', tags:['action','result','wisdom'],
+ sanskrit:'आलस्यं हि मनुष्याणां शरीरस्थो महान् रिपुः।\nनास्त्युद्यमसमो बन्धुः कृत्वा यं नावसीदति॥',
+ iast:'ālasyaṃ hi manuṣyāṇāṃ śarīrastho mahān ripuḥ | nāsty udyamasamō bandhuḥ kṛtvā yaṃ nāvasīdati ||',
+ translation:'Laziness is indeed the greatest enemy residing in the body of man. There is no friend equal to hard work, by doing which one never fails.',
+ keywords:['laziness','enemy','hard work','effort','friend','आलस्य','रिपु','उद्यम','बन्धु']},
+
+{id:405, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 8, V.15', tags:['time','opportunity','action'],
+ sanskrit:'काव्यशास्त्रविनोदेन कालो गच्छति धीमताम्।\nव्यसनेन च मूर्खाणां निद्रया कलहेन वा॥',
+ iast:'kāvyaśāstravinodena kālo gacchati dhīmatām | vyasanena ca mūrkhāṇāṃ nidrayā kalahena vā ||',
+ translation:'Time passes for the wise in study of poetry and sciences. For the foolish, it passes in vices, sleep, and quarrels.',
+ keywords:['time','study','poetry','wise','foolish','waste','काव्य','शास्त्र','काल','मूर्ख']},
+
+/* ══ MORE UPANISHADS ══ */
+{id:250, source:'upanishad', scripture:'Isha Upanishad', ref:'Verse 1', tags:['renunciation','contentment','greed'],
+ sanskrit:'ईशावास्यमिदँ सर्वं यत्किञ्च जगत्यां जगत्।\nतेन त्यक्तेन भुञ्जीथा मा गृधः कस्यस्विद्धनम्॥',
+ iast:'īśāvāsyam idaṃ sarvaṃ yat kiñca jagatyāṃ jagat | tena tyaktena bhuñjīthā mā gṛdhaḥ kasya svid dhanam ||',
+ translation:'All this — whatever exists in this changing universe — should be covered by the Lord. Protect yourself through that renunciation. Do not covet the wealth of anyone.',
+ keywords:['isha','renunciation','lord','universe','covet','greed','wealth','ईश','त्याग','धन']},
+
+{id:251, source:'upanishad', scripture:'Mundaka Upanishad', ref:'2.2.11', tags:['liberation','light','brahman'],
+ sanskrit:'ब्रह्मैवेदममृतं पुरस्तात् ब्रह्म पश्चात् ब्रह्म दक्षिणतश्चोत्तरेण।\nअधश्चोर्ध्वं च प्रसृतं ब्रह्मैवेदं विश्वमिदं वरिष्ठम्॥',
+ iast:'brahmaivedam amṛtaṃ purastāt brahma paścāt brahma dakṣiṇataś cottareṇa | adhaś cordhvaṃ ca prasṛtaṃ brahmaivedam viśvam idaṃ variṣṭham ||',
+ translation:'This immortal Brahman is in front; Brahman is behind, Brahman is to the right and to the left. It spreads forth below and above. This universe is nothing but Brahman, the highest.',
+ keywords:['brahman','universe','everywhere','immortal','directions','ब्रह्म','अमृत','विश्व']},
+
+{id:252, source:'upanishad', scripture:'Katha Upanishad', ref:'1.2.23', tags:['atman','grace','choose'],
+ sanskrit:'नायमात्मा प्रवचनेन लभ्यो न मेधया न बहुना श्रुतेन।\nयमेवैष वृणुते तेन लभ्यस्तस्यैष आत्मा विवृणुते तनूं स्वाम्॥',
+ iast:'nāyam ātmā pravacanena labhyo na medhayā na bahunā śrutena | yam evaiṣa vṛṇute tena labhyas tasyaiṣa ātmā vivṛṇute tanūṃ svām ||',
+ translation:'This Self cannot be attained by the study of the Vedas, nor by intellect, nor by much learning. He whom the Self chooses, by him the Self can be gained; the Self chooses him as his own.',
+ keywords:['atman','self','grace','choose','intellect','vedas','आत्मा','मेधा','वृणुते']},
+
+/* ══ YOGA SUTRAS & OTHERS ══ */
+{id:500, source:'other', scripture:'Yoga Sutras of Patanjali', ref:'1.2', tags:['yoga','mind','control'],
+ sanskrit:'योगश्चित्तवृत्तिनिरोधः॥',
+ iast:'yogaś citta-vṛtti-nirodhaḥ ||',
+ translation:'Yoga is the cessation of the movements of the mind (chitta-vrittis).',
+ keywords:['yoga','mind','control','cessation','chitta','vritti','योग','चित्त','निरोध']},
+
+{id:501, source:'other', scripture:'Yoga Sutras of Patanjali', ref:'1.1', tags:['yoga','instruction','beginning'],
+ sanskrit:'अथ योगानुशासनम्॥',
+ iast:'atha yogānuśāsanam ||',
+ translation:'Now, the instruction in yoga begins.',
+ keywords:['yoga','now','instruction','beginning','atha','अथ','योग','अनुशासन']},
+
+{id:502, source:'other', scripture:'Yoga Sutras of Patanjali', ref:'2.46', tags:['asana','posture','yoga'],
+ sanskrit:'स्थिरसुखमासनम्॥',
+ iast:'sthira-sukham āsanam ||',
+ translation:'The asana (posture) should be steady and comfortable.',
+ keywords:['asana','posture','steady','comfortable','yoga','स्थिर','सुख','आसन']},
+
+{id:503, source:'other', scripture:'Subhashita Ratna Bhandagara', ref:'Niti', tags:['experience','teacher','best'],
+ sanskrit:'सर्वे गुणाः काञ्चनमाश्रयन्ति।',
+ iast:'sarve guṇāḥ kāñcanam āśrayanti.',
+ translation:'All virtues rest in gold (i.e., in wealth / the virtuous).',
+ keywords:['virtue','wealth','gold','character','quality','गुण','काञ्चन']},
+
+{id:504, source:'other', scripture:'Hitopadesha', ref:'1.1', tags:['wisdom','friendship','life'],
+ sanskrit:'अयं निजः परो वेति गणना लघुचेतसाम्।\nउदारचरितानां तु वसुधैव कुटुम्बकम्॥',
+ iast:'ayaṃ nijaḥ paro veti gaṇanā laghucetasām | udāracaritānāṃ tu vasudhaiva kuṭumbakam ||',
+ translation:'The distinction of "mine" and "others" is for the narrow-minded. For those of noble character, the entire earth is one family.',
+ keywords:['vasudhaiva','kutumbakam','world','family','unity','brotherhood','वसुधैव','कुटुम्बकम्','उदार']},
+
+{id:505, source:'other', scripture:'Manusmriti', ref:'2.145', tags:['teacher','guru','reverence'],
+ sanskrit:'उपाध्यायान्दशाचार्य आचार्याणां शतं पिता।\nसहस्रं तु पितृन्माता गौरवेणातिरिच्यते॥',
+ iast:'upādhyāyān daśācārya ācāryāṇāṃ śataṃ pitā | sahasraṃ tu pitṛn mātā gauraveṇātiricyate ||',
+ translation:'A teacher is ten times more honorable than a sub-teacher, a father is a hundred times more than a teacher, and a mother is a thousand times more than a father in terms of reverence.',
+ keywords:['mother','father','teacher','guru','respect','reverence','माता','पिता','आचार्य']},
+
+{id:506, source:'other', scripture:'Vishnu Sahasranama', ref:'Stanza 1', tags:['vishnu','names','god'],
+ sanskrit:'विश्वं विष्णुर्वषट्कारो भूतभव्यभवत्प्रभुः।\nभूतकृद् भूतभृद् भावो भूतात्मा भूतभावनः॥',
+ iast:'viśvaṃ viṣṇur vaṣaṭkāro bhūtabhavyabhavatprabhuḥ | bhūtakṛd bhūtabhṛd bhāvo bhūtātmā bhūtabhāvanaḥ ||',
+ translation:'He is the Universe, He is Vishnu, He is the leader of Vashatkara; He is the master of the past, present and future. He is the creator of beings, sustainer of beings, and the essence of all beings.',
+ keywords:['vishnu','universe','lord','past','present','future','विष्णु','भूत','भव्य']},
+
+{id:507, source:'other', scripture:'Shiva Mahimna Stotra', ref:'Verse 7', tags:['shiva','devotion','prayer'],
+ sanskrit:'असितगिरिसमं स्यात्कज्जलं सिन्धुपात्रे सुरतरुवरशाखा लेखनी पत्रमुर्वी।\nलिखति यदि गृहीत्वा शारदा सर्वकालं तदपि तव गुणानामीश पारं न याति॥',
+ iast:'asitagirisam syāt kajjalaṃ sindhupātre surataruvarāśākhā lekhanī patram urvī | likhati yadi gṛhītvā śāradā sarvakālaṃ tadapi tava guṇānāmīśa pāraṃ na yāti ||',
+ translation:'If the blue mountain were ink, the ocean were the inkpot, the best divine tree were the pen, the earth were the writing surface, and the goddess of learning (Saraswati) were to write for eternity, even then the limit of your (Shiva\'s) qualities would not be reached.',
+ keywords:['shiva','praise','qualities','infinite','saraswati','शिव','शारदा','गुण']},
+
+/* ══ MORE BHAGAVAD GITA ══ */
+{id:13, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.12, V.13-14', tags:['devotion','love','compassion'],
+ sanskrit:'अद्वेष्टा सर्वभूतानां मैत्रः करुण एव च।\nनिर्ममो निरहङ्कारः समदुःखसुखः क्षमी॥\nसन्तुष्टः सततं योगी यतात्मा दृढनिश्चयः।\nमय्यर्पितमनोबुद्धिर्यो मद्भक्तः स मे प्रियः॥',
+ iast:'adveṣṭā sarvabhūtānāṃ maitraḥ karuṇa eva ca | nirmamo nirahaṅkāraḥ samaduḥkhasukhaḥ kṣamī || santuṣṭaḥ satataṃ yogī yatātmā dṛḍhaniścayaḥ | mayy arpitamanobuddhir yo madbhaktaḥ sa me priyaḥ ||',
+ translation:'One who is not envious but is a kind friend to all creatures, who does not think himself a proprietor and is free from false ego, who is equal in both happiness and distress, who is tolerant, always satisfied, self-controlled, and engaged in devotional service with determination, his mind and intelligence fixed on Me — such a devotee of Mine is very dear to Me.',
+ keywords:['compassion','friend','ego','happiness','sorrow','devotion','love','करुण','मैत्र','भक्त']},
+
+{id:14, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.10, V.20', tags:['atman','god','within'],
+ sanskrit:'अहमात्मा गुडाकेश सर्वभूताशयस्थितः।\nअहमादिश्च मध्यं च भूतानामन्त एव च॥',
+ iast:'aham ātmā guḍākeśa sarvabhūtāśayasthitaḥ | aham ādiś ca madhyaṃ ca bhūtānāmanta eva ca ||',
+ translation:'I am the Soul, O Gudakesha (Arjuna), seated in the hearts of all creatures. I am the beginning, the middle and the end of all beings.',
+ keywords:['god','within','soul','heart','beginning','end','आत्मा','गुडाकेश','आदि','अन्त']},
+
+{id:15, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.7, V.19', tags:['knowledge','wisdom','god'],
+ sanskrit:'बहूनां जन्मनामन्ते ज्ञानवान्मां प्रपद्यते।\nवासुदेवः सर्वमिति स महात्मा सुदुर्लभः॥',
+ iast:'bahūnāṃ janmanām ante jñānavān māṃ prapadyate | vāsudevaḥ sarvam iti sa mahātmā sudurlabhaḥ ||',
+ translation:'After many births and deaths, he who is actually in knowledge surrenders unto Me, knowing Me to be the cause of all causes and all that is. Such a great soul is very rare.',
+ keywords:['knowledge','wisdom','surrender','vasudev','birth','death','great soul','ज्ञानवान','वासुदेव','महात्मा']},
+
+/* More shlokas to expand the database */
+{id:600, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.3, V.42', tags:['senses','mind','intelligence','soul'],
+ sanskrit:'इन्द्रियाणि पराण्याहुरिन्द्रियेभ्यः परं मनः।\nमनसस्तु परा बुद्धिर्यो बुद्धेः परतस्तु सः॥',
+ iast:'indriyāṇi parāṇy āhur indriyebhyaḥ paraṃ manaḥ | manasas tu parā buddhir yo buddheḥ paratas tu saḥ ||',
+ translation:'The senses are superior to dull matter; mind is higher than the senses; intelligence is still higher than the mind; and the soul is even higher than intelligence.',
+ keywords:['senses','mind','intelligence','soul','hierarchy','इन्द्रिय','मन','बुद्धि']},
+
+{id:601, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.62-63', tags:['anger','desire','destruction'],
+ sanskrit:'ध्यायतो विषयान्पुंसः सङ्गस्तेषूपजायते।\nसङ्गात्सञ्जायते कामः कामात्क्रोधोऽभिजायते॥\nक्रोधाद्भवति संमोहः संमोहात्स्मृतिविभ्रमः।\nस्मृतिभ्रंशाद् बुद्धिनाशो बुद्धिनाशात्प्रणश्यति॥',
+ iast:'dhyāyato viṣayān puṃsaḥ saṅgas teṣūpajāyate | saṅgāt sañjāyate kāmaḥ kāmāt krodho\'bhijāyate || krodhād bhavati saṃmohaḥ saṃmohāt smṛtivibhramaḥ | smṛtibhraṃśād buddhinaśo buddhinaśāt praṇaśyati ||',
+ translation:'While contemplating the objects of the senses, a person develops attachment for them, and from such attachment lust develops, and from lust anger arises. From anger, complete delusion arises, and from delusion bewilderment of memory. When memory is bewildered, intelligence is lost, and when intelligence is lost one falls down again into the material pool.',
+ keywords:['anger','desire','lust','delusion','memory','destruction','क्रोध','काम','मोह','स्मृति']},
+
+{id:602, source:'upanishad', scripture:'Chandogya Upanishad', ref:'3.14.1', tags:['brahman','all','self'],
+ sanskrit:'सर्वं खल्विदं ब्रह्म तज्जलानिति शान्त उपासीत।\nअथ खलु क्रतुमयः पुरुषो यथाक्रतुरस्मिँल्लोके पुरुषो भवति तथेतः प्रेत्य भवति स क्रतुं कुर्वीत॥',
+ iast:'sarvaṃ khalv idaṃ brahma tajjalānīti śānta upāsīta | atha khalu kratumayaḥ puruṣo yathākratur asmiṃl loke puruṣo bhavati tathetaḥ pretya bhavati sa kratuṃ kurvīta ||',
+ translation:'All this is indeed Brahman. From it the universe comes forth, in it the universe will dissolve, and in it the universe breathes. With tranquility, one should meditate on this. The individual self is of the nature of will; as the will of a man is in this world, so he becomes after death. Let him perform his will.',
+ keywords:['brahman','all','universe','will','meditation','सर्व','ब्रह्म','उपासन']},
+
+{id:603, source:'ramayana', scripture:'Valmiki Ramayana', ref:'Ayodhya Kanda', tags:['truth','promise','honor'],
+ sanskrit:'रामो विग्रहवान् धर्मः साधुः सत्यपराक्रमः।\nराजा सर्वस्य लोकस्य देवानाम् इव वासवः॥',
+ iast:'rāmo vigrajavān dharmaḥ sādhuḥ satyaparākramaḥ | rājā sarvasya lokasya devānām iva vāsavaḥ ||',
+ translation:'Rama is the embodiment of righteousness, noble, of true valor. He is the king of all the world, like Indra is king of the gods.',
+ keywords:['rama','dharma','king','righteousness','valor','truth','राम','धर्म','सत्य','राजा']},
+
+{id:604, source:'chanakya', scripture:'Chanakya Niti', ref:'Chapter 12', tags:['water','character','association'],
+ sanskrit:'दुर्जनः परिहर्तव्यो विद्ययालंकृतोऽपि सन्।\nमणिना भूषितः सर्पः किमसौ न भयङ्करः॥',
+ iast:'durjanaḥ parihartavyo vidyayālaṃkṛto\'pi san | maṇinā bhūṣitaḥ sarpaḥ kim asau na bhayaṃkaraḥ ||',
+ translation:'A wicked person should be avoided even if he is adorned with learning. A snake decorated with a jewel — is it not still dangerous?',
+ keywords:['evil','avoid','learning','snake','danger','jewel','दुर्जन','सर्प','मणि','भय']},
+
+{id:605, source:'vedas', scripture:'Sama Veda', ref:'1.1.1', tags:['song','worship','light'],
+ sanskrit:'अग्न आयाहि वीतये गृणानो हव्यदातये।\nनि होता सत्सि बर्हिषि॥',
+ iast:'agna āyāhi vītaye gṛṇāno havyadātaye | ni hotā satsi barhiṣi ||',
+ translation:'Come, O Agni, to the feast, accepting our praise, for the giving of oblations. Sit down as the invoking priest on the sacred grass.',
+ keywords:['agni','fire','worship','feast','oblation','priest','अग्नि','हव्य','होता']},
+
+{id:606, source:'other', scripture:'Narada Bhakti Sutras', ref:'Sutra 2', tags:['bhakti','devotion','love'],
+ sanskrit:'सा त्वस्मिन् परमप्रेमरूपा॥',
+ iast:'sā tv asmin paramapremarūpā ||',
+ translation:'That (bhakti) is of the nature of supreme love towards Him (God).',
+ keywords:['bhakti','love','devotion','supreme','god','भक्ति','प्रेम','परम']},
+
+{id:607, source:'other', scripture:'Vivekachudamani (Adi Shankaracharya)', ref:'Verse 20', tags:['rare','human','liberation'],
+ sanskrit:'जन्तूनां नरजन्म दुर्लभमतः पुम्स्त्वं ततो विप्रता तस्माद्वैदिकधर्ममार्गपरता विद्वत्त्वमस्मात्परम्।\nआत्मानात्मविवेचनं स्वनुभवो ब्रह्मात्मना संस्थितिर्मुक्तिर्नो शतजन्मकोटिसुकृतैः पुण्यैर्विना लभ्यते॥',
+ iast:'jantūnāṃ narajanma durlabham ataḥ puṃstvaṃ tato vipratā tasmād vaidikadharmamārgaparatā vidvattvam asmāt param | ātmānātmavivecanaṃ svanubhavo brahmātmanā saṃsthitir muktir no śatajanmakoṭisukṛtaiḥ puṇyair vinā labhyate ||',
+ translation:'Among all creatures, human birth is rare. Among humans, being a man (in spiritual sense) is rarer. Among these, Brahmanical nature is rarer still. Among these, the path of Vedic dharma is rarer. Knowledge of Self is even rarer. Liberation cannot be achieved without the merits of a hundred crore lifetimes.',
+ keywords:['rare','human','birth','brahman','knowledge','liberation','moksha','नरजन्म','दुर्लभ','मुक्ति']},
+
+{id:608, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.4, V.34', tags:['knowledge','guru','inquiry'],
+ sanskrit:'तद्विद्धि प्रणिपातेन परिप्रश्नेन सेवया।\nउपदेक्ष्यन्ति ते ज्ञानं ज्ञानिनस्तत्त्वदर्शिनः॥',
+ iast:'tad viddhi praṇipātena paripraśnena sevayā | upadekṣyanti te jñānaṃ jñāninas tattvadarśinaḥ ||',
+ translation:'Just try to learn the truth by approaching a spiritual master. Inquire from him submissively and render service unto him. The self-realized souls can impart knowledge unto you because they have seen the truth.',
+ keywords:['guru','teacher','knowledge','inquiry','truth','service','ज्ञान','गुरु','सेवा','प्रणिपात']},
 ];
 
-function buildMarquee() {
-  const row1El = document.getElementById('marquee-row1');
-  const row2El = document.getElementById('marquee-row2');
-  const d1 = marqueeData.slice(0, 11);
-  const d2 = marqueeData.slice(11);
+/* ════════════════════════════════════════
+   TOPICS DATA
+════════════════════════════════════════ */
+const TOPICS = [
+  { icon:'धर्म', name:'Dharma', keywords:['dharma','righteousness','duty'], count:null },
+  { icon:'कर्म', name:'Karma', keywords:['karma','action','work','deed'], count:null },
+  { icon:'भक्ति', name:'Bhakti', keywords:['devotion','bhakti','love','worship'], count:null },
+  { icon:'ज्ञान', name:'Jnana', keywords:['knowledge','wisdom','jnana','truth'], count:null },
+  { icon:'शांति', name:'Shanti', keywords:['peace','shanti','calm','harmony'], count:null },
+  { icon:'आत्मा', name:'Atman', keywords:['soul','atman','self','consciousness'], count:null },
+  { icon:'मोक्ष', name:'Moksha', keywords:['liberation','moksha','freedom','mukti'], count:null },
+  { icon:'गुरु', name:'Guru', keywords:['teacher','guru','master','disciple'], count:null },
+  { icon:'माया', name:'Maya', keywords:['maya','illusion','world','unreal'], count:null },
+  { icon:'ब्रह्म', name:'Brahman', keywords:['brahman','absolute','infinite','cosmic'], count:null },
+  { icon:'योग', name:'Yoga', keywords:['yoga','union','practice','discipline'], count:null },
+  { icon:'प्रेम', name:'Prema', keywords:['love','compassion','prema','kindness','friend'], count:null },
+];
 
-  function tile(d) {
-    return `
-      <div class="marquee-item">
-        <div class="marquee-item-inner">
-          <div class="marquee-item-glyph">${d.glyph}</div>
-          <div class="marquee-item-title">${d.title}</div>
-          <div class="marquee-item-sub">${d.sub}</div>
-        </div>
-      </div>`;
-  }
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let currentFilter = 'all';
+let currentResults = [];
+let dailyIndex = 0;
 
-  row1El.innerHTML = [...d1, ...d1, ...d1].map(tile).join('');
-  row2El.innerHTML = [...d2, ...d2, ...d2].map(tile).join('');
-}
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initParticles();
+  initNav();
+  computeTopicCounts();
+  renderTopics();
+  setDailyShlokaByDate();
+  updateTotalCount();
+  setupSearch();
+});
 
-buildMarquee();
+/* ════════════════════════════════════════
+   PARTICLES
+════════════════════════════════════════ */
+function initParticles() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
 
-// Scroll-driven marquee
-const marqueeSec = document.querySelector('.marquee-section');
-const row1 = document.getElementById('marquee-row1');
-const row2 = document.getElementById('marquee-row2');
+  const resize = () => {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  };
+  resize();
+  window.addEventListener('resize', resize);
 
-let mrafId;
-function updateMarquee() {
-  const rect = marqueeSec.getBoundingClientRect();
-  const offset = (-rect.top + window.innerHeight) * 0.28;
-  row1.style.transform = `translateX(${offset - 180}px)`;
-  row2.style.transform = `translateX(${-(offset - 180)}px)`;
-  mrafId = null;
-}
+  // Sanskrit characters for particles
+  const chars = ['ॐ','अ','क','ह','स','म','न','र','य','व','श','ध','भ','ज','त','प','ल','ग','द','ब','ख','च'];
 
-window.addEventListener('scroll', () => {
-  if (!mrafId) mrafId = requestAnimationFrame(updateMarquee);
-}, { passive: true });
-
-/* ════════════════════════════════════
-   ABOUT CHARACTER REVEAL
-════════════════════════════════════ */
-function buildCharReveal(el) {
-  const text = el.textContent;
-  el.innerHTML = '';
-  el.style.position = 'relative';
-
-  const chars = [];
-  for (const ch of text) {
-    const wrap = document.createElement('span');
-    wrap.style.cssText = 'position:relative;display:inline;white-space:pre-wrap;';
-
-    const ghost = document.createElement('span');
-    ghost.style.cssText = 'opacity:0;';
-    ghost.textContent = ch;
-
-    const anim = document.createElement('span');
-    anim.style.cssText = 'position:absolute;left:0;top:0;opacity:0.18;transition:opacity 0.12s;white-space:pre-wrap;';
-    anim.textContent = ch;
-
-    wrap.appendChild(ghost);
-    wrap.appendChild(anim);
-    el.appendChild(wrap);
-    chars.push(anim);
-  }
-
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const rect = el.getBoundingClientRect();
-        const elTop = window.scrollY + rect.top;
-        const elH = rect.height + window.innerHeight * 0.6;
-
-        function onScroll() {
-          const pct = Math.max(0, Math.min(1, (window.scrollY - elTop + window.innerHeight * 0.8) / elH));
-          const threshold = pct;
-          chars.forEach((ch, i) => {
-            const charPct = i / chars.length;
-            ch.style.opacity = charPct <= threshold ? '1' : '0.18';
-          });
-        }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-      }
-    });
-  }, { threshold: 0.1 });
-
-  obs.observe(el);
-}
-
-const aboutText = document.getElementById('about-text');
-if (aboutText) buildCharReveal(aboutText);
-
-/* ════════════════════════════════════
-   STICKY CARD STACK — SCALE EFFECT
-════════════════════════════════════ */
-const totalCards = 3;
-
-function updateCards() {
-  for (let i = 0; i < totalCards; i++) {
-    const card = document.getElementById(`card-${i}`);
-    if (!card) continue;
-
-    const wrapper = card.closest('.card-wrapper');
-    const rect = wrapper.getBoundingClientRect();
-    const st = card.querySelector('.card-sticky');
-
-    // Offset cards so they stack visually
-    card.style.top = `${120 + i * 28}px`;
-
-    // Scale down as subsequent cards overlap
-    const scrolledPast = Math.max(0, -rect.bottom + window.innerHeight);
-    const progress = Math.min(1, scrolledPast / (window.innerHeight * 0.6));
-    const targetScale = 1 - (totalCards - 1 - i) * 0.03;
-    const scale = 1 - (1 - targetScale) * progress;
-
-    st.style.transform = `scale(${scale})`;
-    st.style.transformOrigin = 'top center';
-  }
-}
-
-window.addEventListener('scroll', updateCards, { passive: true });
-updateCards();
-
-/* ════════════════════════════════════
-   CURSOR GLOW (desktop only)
-════════════════════════════════════ */
-if (window.matchMedia('(pointer: fine)').matches) {
-  const glow = document.createElement('div');
-  Object.assign(glow.style, {
-    position: 'fixed', pointerEvents: 'none', zIndex: '9998',
-    width: '360px', height: '360px', borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(212,168,67,0.055) 0%, transparent 70%)',
-    transform: 'translate(-50%, -50%)',
-    transition: 'left 0.06s ease, top 0.06s ease',
-    willChange: 'left, top',
-  });
-  document.body.appendChild(glow);
-  window.addEventListener('mousemove', e => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top  = e.clientY + 'px';
-  }, { passive: true });
-}
-
-/* ════════════════════════════════════
-   MAGNET EFFECT on portrait
-════════════════════════════════════ */
-(function setupMagnet() {
-  const el = document.getElementById('portrait');
-  if (!el) return;
-  const PADDING = 120, STRENGTH = 3.5;
-  let active = false;
-
-  window.addEventListener('mousemove', e => {
-    const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top  + rect.height / 2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const threshold = Math.max(rect.width, rect.height) / 2 + PADDING;
-
-    if (dist < threshold) {
-      if (!active) {
-        el.style.transition = 'transform 0.3s ease-out';
-        active = true;
-      }
-      el.style.transform = `translate3d(${dx / STRENGTH}px, ${dy / STRENGTH}px, 0)`;
-    } else if (active) {
-      el.style.transition = 'transform 0.65s ease-in-out';
-      el.style.transform = 'translate3d(0, 0, 0)';
-      active = false;
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.char = chars[Math.floor(Math.random() * chars.length)];
+      this.size = Math.random() * 12 + 8;
+      this.alpha = Math.random() * 0.08 + 0.02;
+      this.vx = (Math.random() - 0.5) * 0.2;
+      this.vy = (Math.random() - 0.5) * 0.15 - 0.05;
+      this.life = 1;
+      this.decay = Math.random() * 0.001 + 0.0003;
     }
-  }, { passive: true });
-})();
-</script>
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha * this.life;
+      ctx.fillStyle = '#d4a03c';
+      ctx.font = `${this.size}px 'Noto Sans Devanagari', serif`;
+      ctx.fillText(this.char, this.x, this.y);
+      ctx.restore();
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life -= this.decay;
+      if (this.life <= 0 || this.x < -20 || this.x > W + 20 || this.y < -20 || this.y > H + 20) {
+        this.reset();
+      }
+    }
+  }
 
+  for (let i = 0; i < 60; i++) {
+    const p = new Particle();
+    p.y = Math.random() * H; // distribute initially
+    particles.push(p);
+  }
+
+  const animate = () => {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  };
+  animate();
+}
+
+/* ════════════════════════════════════════
+   NAV
+════════════════════════════════════════ */
+function initNav() {
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+}
+
+/* ════════════════════════════════════════
+   DAILY SHLOKA
+════════════════════════════════════════ */
+function setDailyShlokaByDate() {
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 864e5);
+  dailyIndex = dayOfYear % SHLOKAS.length;
+  renderDailyShloka(SHLOKAS[dailyIndex]);
+}
+
+function rotateDailyShloka() {
+  dailyIndex = (dailyIndex + 1) % SHLOKAS.length;
+  const card = document.getElementById('dailyCard');
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(10px)';
+  setTimeout(() => {
+    renderDailyShloka(SHLOKAS[dailyIndex]);
+    card.style.transition = 'opacity 0.5s, transform 0.5s';
+    card.style.opacity = '1';
+    card.style.transform = '';
+  }, 300);
+}
+
+function renderDailyShloka(s) {
+  document.getElementById('dailyShloka').innerHTML = s.sanskrit.replace(/\n/g, '<br>');
+  document.getElementById('dailyIast').textContent = s.iast.split('|')[0].trim() + (s.iast.includes('|') ? ' |' : '');
+  document.getElementById('dailyTranslation').textContent = s.translation.substring(0, 200) + (s.translation.length > 200 ? '…' : '');
+  document.getElementById('dailyMeta').textContent = `${s.scripture} · ${s.ref}`;
+  document.getElementById('dailyBgText').textContent = s.sanskrit.charAt(0) || 'ॐ';
+}
+
+/* ════════════════════════════════════════
+   SEARCH
+════════════════════════════════════════ */
+function setupSearch() {
+  const input = document.getElementById('searchInput');
+  const suggestions = document.getElementById('suggestions');
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    if (q.length === 0) {
+      suggestions.classList.remove('show');
+      clearResults();
+      return;
+    }
+    if (q.length === 1) {
+      showSuggestions(q);
+    } else {
+      suggestions.classList.remove('show');
+      doSearch(q);
+    }
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { suggestions.classList.remove('show'); doSearch(); }
+    if (e.key === 'Escape') { suggestions.classList.remove('show'); }
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-container')) suggestions.classList.remove('show');
+  });
+}
+
+function showSuggestions(q) {
+  const suggestions = document.getElementById('suggestions');
+  const results = searchShlokas(q).slice(0, 5);
+  if (results.length === 0) { suggestions.classList.remove('show'); return; }
+
+  suggestions.innerHTML = results.map(s => `
+    <div class="suggestion-item" onclick="selectSuggestion('${encodeURIComponent(s.sanskrit.split('\n')[0].substring(0, 20))}')">
+      <span class="suggestion-devanagari">${s.sanskrit.split('\n')[0].substring(0, 30)}…</span>
+      <span class="suggestion-source">${s.scripture}</span>
+    </div>
+  `).join('');
+  suggestions.classList.add('show');
+}
+
+function selectSuggestion(enc) {
+  const text = decodeURIComponent(enc);
+  document.getElementById('searchInput').value = text;
+  document.getElementById('suggestions').classList.remove('show');
+  doSearch(text);
+}
+
+function doSearch(q) {
+  q = q !== undefined ? q : document.getElementById('searchInput').value.trim();
+  if (!q) { clearResults(); return; }
+
+  document.getElementById('loadingDiv').classList.add('show');
+  document.getElementById('resultsGrid').innerHTML = '';
+  document.getElementById('statusBar').style.display = 'none';
+  document.getElementById('emptyState').classList.remove('show');
+
+  // Scroll to results
+  document.getElementById('resultsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  setTimeout(() => {
+    const results = searchShlokas(q);
+    document.getElementById('loadingDiv').classList.remove('show');
+    currentResults = results;
+
+    if (results.length === 0) {
+      document.getElementById('emptyState').classList.add('show');
+    } else {
+      renderResults(results, q);
+      document.getElementById('statusBar').style.display = 'flex';
+      document.getElementById('statusCount').innerHTML = `Found <span>${results.length}</span> shloka${results.length !== 1 ? 's' : ''} for "<span>${q}</span>"`;
+    }
+  }, 300);
+}
+
+function searchShlokas(q) {
+  q = q.toLowerCase().trim();
+  const filter = currentFilter;
+
+  return SHLOKAS
+    .filter(s => {
+      if (filter !== 'all' && s.source !== filter) return false;
+      return (
+        s.sanskrit.toLowerCase().includes(q) ||
+        s.iast.toLowerCase().includes(q) ||
+        s.translation.toLowerCase().includes(q) ||
+        s.scripture.toLowerCase().includes(q) ||
+        s.ref.toLowerCase().includes(q) ||
+        s.tags.some(t => t.toLowerCase().includes(q)) ||
+        (s.keywords && s.keywords.some(k => k.toLowerCase().includes(q)))
+      );
+    })
+    .sort((a, b) => {
+      // Prioritize Sanskrit/exact matches
+      const aS = a.sanskrit.toLowerCase().includes(q) ? 3 : 0;
+      const aI = a.iast.toLowerCase().includes(q) ? 2 : 0;
+      const aT = a.translation.toLowerCase().includes(q) ? 1 : 0;
+      const bS = b.sanskrit.toLowerCase().includes(q) ? 3 : 0;
+      const bI = b.iast.toLowerCase().includes(q) ? 2 : 0;
+      const bT = b.translation.toLowerCase().includes(q) ? 1 : 0;
+      return (bS + bI + bT) - (aS + aI + aT);
+    });
+}
+
+function highlightText(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<mark class="shloka-highlight" style="background:rgba(212,160,60,0.2);border-radius:3px;padding:0 2px">$1</mark>');
+}
+
+function clearResults() {
+  document.getElementById('resultsGrid').innerHTML = '';
+  document.getElementById('statusBar').style.display = 'none';
+  document.getElementById('emptyState').classList.remove('show');
+  currentResults = [];
+}
+
+/* ════════════════════════════════════════
+   RENDER RESULTS
+════════════════════════════════════════ */
+function renderResults(results, query) {
+  const grid = document.getElementById('resultsGrid');
+  grid.innerHTML = results.map((s, i) => {
+    const badgeClass = `badge-${s.source}`;
+    const sanskritHtml = highlightText(s.sanskrit.replace(/\n/g, '<br>'), query);
+    const translationHtml = highlightText(s.translation.substring(0, 220) + (s.translation.length > 220 ? '…' : ''), query);
+
+    return `
+    <article class="shloka-card" style="animation-delay:${i * 0.05}s" id="card-${s.id}">
+      <div class="shloka-source">
+        <span class="source-badge ${badgeClass}">${s.scripture.split(' ')[0] + (s.scripture.split(' ')[1] ? ' ' + s.scripture.split(' ')[1] : '')}</span>
+        <span class="source-ref">${s.ref}</span>
+      </div>
+      <div class="shloka-sanskrit">${sanskritHtml}</div>
+      <div class="shloka-iast">${s.iast.split('|')[0].trim()}…</div>
+      <div class="card-divider"></div>
+      <div class="shloka-translation">${translationHtml}</div>
+      <div class="card-footer">
+        <div class="card-tags">
+          ${s.tags.slice(0, 3).map(t => `<span class="card-tag">${t}</span>`).join('')}
+        </div>
+        <div class="card-actions">
+          <button class="card-action-btn" title="Copy Sanskrit" onclick="copyShloka(${s.id})">📋</button>
+          <button class="card-action-btn" title="Share" onclick="shareShloka(${s.id})">🔗</button>
+          <button class="card-action-btn" title="Full View" onclick="showFullShloka(${s.id})">↗</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════
+   ACTIONS
+════════════════════════════════════════ */
+function copyShloka(id) {
+  const s = SHLOKAS.find(s => s.id === id);
+  if (!s) return;
+  const text = `${s.sanskrit}\n\n${s.iast}\n\n${s.translation}\n\n— ${s.scripture}, ${s.ref}`;
+  navigator.clipboard.writeText(text).then(() => showToast('Shloka copied to clipboard! 🙏'));
+}
+
+function shareShloka(id) {
+  const s = SHLOKAS.find(s => s.id === id);
+  if (!s) return;
+  const url = `${window.location.origin}${window.location.pathname}#shloka-${id}`;
+  if (navigator.share) {
+    navigator.share({ title: `Sanskrit Shloka — ${s.scripture}`, text: s.sanskrit + '\n\n' + s.translation, url });
+  } else {
+    navigator.clipboard.writeText(url);
+    showToast('Link copied! 🔗');
+  }
+}
+
+function showFullShloka(id) {
+  const s = SHLOKAS.find(s => s.id === id);
+  if (!s) return;
+  // Scroll to card and expand
+  document.getElementById(`card-${id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ════════════════════════════════════════
+   FILTER
+════════════════════════════════════════ */
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) doSearch(q);
+}
+
+/* ════════════════════════════════════════
+   SORT
+════════════════════════════════════════ */
+function sortResults() {
+  const sort = document.getElementById('sortSelect').value;
+  let sorted = [...currentResults];
+  if (sort === 'scripture') sorted.sort((a, b) => a.scripture.localeCompare(b.scripture));
+  if (sort === 'length')    sorted.sort((a, b) => b.sanskrit.length - a.sanskrit.length);
+  renderResults(sorted, document.getElementById('searchInput').value.trim());
+}
+
+/* ════════════════════════════════════════
+   TOPICS
+════════════════════════════════════════ */
+function computeTopicCounts() {
+  TOPICS.forEach(t => {
+    t.count = SHLOKAS.filter(s =>
+      t.keywords.some(k => s.keywords && s.keywords.some(sk => sk.toLowerCase().includes(k)))
+    ).length;
+  });
+}
+
+function renderTopics() {
+  document.getElementById('topicsGrid').innerHTML = TOPICS.map(t => `
+    <div class="topic-card" onclick="searchByTopic('${t.keywords[0]}')">
+      <span class="topic-icon">${t.icon}</span>
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-count">${t.count || '10'}+ shlokas</div>
+    </div>
+  `).join('');
+}
+
+function searchByTopic(keyword) {
+  document.getElementById('searchInput').value = keyword;
+  doSearch(keyword);
+  document.getElementById('resultsGrid').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════
+   STATS
+════════════════════════════════════════ */
+function updateTotalCount() {
+  // Animated counter
+  const el = document.getElementById('totalCount');
+  const target = SHLOKAS.length;
+  let current = 0;
+  const step = () => {
+    current += Math.ceil((target - current) / 8);
+    if (current >= target) { el.textContent = target + '+'; return; }
+    el.textContent = current + '+';
+    requestAnimationFrame(step);
+  };
+  setTimeout(step, 800);
+}
+</script>
 </body>
 </html>
