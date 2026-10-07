@@ -2,7 +2,7 @@
 
 > **Search thousands of Sanskrit shlokas from all major scriptures — Bhagavad Gita, Ramayana, Mahabharata, Upanishads, Vedas, Chanakya Niti — instantly, by typing a single word.**
 
-[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-Sanskrit%20Shloka%20Finder-gold?style=for-the-badge)](https://shrikanthdevaru-lang.github.io/dr-saroj-kumar-padhi-portfolio/)
+[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-Sanskrit%20Shloka%20Finder-gold?style=for-the-badge)](https://shrikanthdevaru-lang.github.io/sanskrit-shloka-search-engine/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green?style=for-the-badge)](https://pages.github.com/)
 
