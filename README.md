@@ -1,4 +1,4 @@
-# 🕉️ Sanskrit Shloka Finder & Vedanta AI Agent
+# 🕉️ गवेषणम् | Gaveshanam — Sanskrit Shloka Explorer & Vedanta AI Agent
 
 > **Search 5,000+ authentic Sanskrit shlokas from all major scriptures — the complete Bhagavad Gita (all 18 chapters), Valmiki Ramayana (Bala & Ayodhya Kandas), Upanishads, Vedas, Mahabharata, Chanakya Niti, Yoga Sutras, Subhashitani & Stotras — instantly, with full Devanagari, English translations, and conversational Vedanta AI guide.**
 
