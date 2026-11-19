@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sanskrit Shloka Finder — Search 1000+ Shlokas from Vedas, Gita, Ramayana & More</title>
+<title>Sanskrit Shloka Finder — Search 5000+ Shlokas from Gita, Ramayana, Upanishads & Vedas</title>
 <meta name="description" content="Instantly find Sanskrit shlokas from Bhagavad Gita, Ramayana, Mahabharata, Upanishads, Vedas, and Puranas. Search by any word in Sanskrit, IAST or English to get the full shloka with source and translation.">
 <meta name="keywords" content="Sanskrit shloka finder, Bhagavad Gita search, Sanskrit verse search, Upanishad shlokas, Vedic texts, Mantra finder">
 <meta property="og:title" content="Sanskrit Shloka Finder">
@@ -760,6 +760,7 @@ nav.scrolled {
   content: ''; flex: 1; height: 1px; background: var(--border);
 }
 </style>
+<script src="shlokas.js"></script>
 </head>
 
 <body>
@@ -788,7 +789,7 @@ nav.scrolled {
     <span class="hero-om">ॐ</span>
     <div class="hero-eyebrow">Ancient Wisdom · Digital Access</div>
     <h1 class="hero-title">Sanskrit Shloka Finder</h1>
-    <p class="hero-subtitle">Search thousands of shlokas from Vedas, Gita, Ramayana & all major scriptures</p>
+    <p class="hero-subtitle">Search 5,000+ shlokas from Bhagavad Gita, Valmiki Ramayana, Upanishads, Vedas & classical scriptures</p>
 
     <!-- Search -->
     <div class="search-container" id="search-section">
@@ -910,7 +911,7 @@ nav.scrolled {
    Bhagavad Gita, Ramayana, Mahabharata,
    Upanishads, Vedas, Chanakya Niti
 ════════════════════════════════════════ */
-const SHLOKAS = [
+const EMBEDDED_SHLOKAS = [
 {id:1, source:'gita', scripture:'Bhagavad Gita', ref:'Ch.2, V.47', tags:["karma","duty","action"],
  sanskrit:'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥',
  iast:'karmaṇy evādhikāras te mā phaleṣu kadācana | mā karmaphalaheturbhūr mā te saṅgostvakarmaṇi ||',
@@ -1957,6 +1958,10 @@ const SHLOKAS = [
 
 ];
 
+const SHLOKAS = (typeof window !== 'undefined' && window.ALL_SHLOKAS && window.ALL_SHLOKAS.length > 0)
+  ? window.ALL_SHLOKAS
+  : EMBEDDED_SHLOKAS;
+
 /* ════════════════════════════════════════
    TOPICS DATA
 ════════════════════════════════════════ */
@@ -2224,21 +2229,35 @@ function clearResults() {
 /* ════════════════════════════════════════
    RENDER RESULTS
 ════════════════════════════════════════ */
-function renderResults(results, query) {
+let visibleCount = 30;
+
+function renderResults(results, query, append = false) {
   const grid = document.getElementById('resultsGrid');
-  grid.innerHTML = results.map((s, i) => {
+  if (!append) {
+    visibleCount = 30;
+    grid.innerHTML = '';
+  }
+
+  const existingBtn = document.getElementById('loadMoreContainer');
+  if (existingBtn) existingBtn.remove();
+
+  const startIdx = append ? visibleCount - 30 : 0;
+  const slice = results.slice(startIdx, visibleCount);
+
+  const cardsHtml = slice.map((s, i) => {
     const badgeClass = `badge-${s.source}`;
     const sanskritHtml = highlightText(s.sanskrit.replace(/\n/g, '<br>'), query);
-    const translationHtml = highlightText(s.translation.substring(0, 220) + (s.translation.length > 220 ? '…' : ''), query);
+    const translationHtml = highlightText(s.translation.substring(0, 240) + (s.translation.length > 240 ? '…' : ''), query);
+    const iastHtml = s.iast ? `<div class="shloka-iast">${s.iast.split('|')[0].trim()}…</div>` : '';
 
     return `
-    <article class="shloka-card" style="animation-delay:${i * 0.05}s" id="card-${s.id}">
+    <article class="shloka-card" style="animation-delay:${(i % 15) * 0.04}s" id="card-${s.id}">
       <div class="shloka-source">
         <span class="source-badge ${badgeClass}">${s.scripture.split(' ')[0] + (s.scripture.split(' ')[1] ? ' ' + s.scripture.split(' ')[1] : '')}</span>
         <span class="source-ref">${s.ref}</span>
       </div>
       <div class="shloka-sanskrit">${sanskritHtml}</div>
-      <div class="shloka-iast">${s.iast.split('|')[0].trim()}…</div>
+      ${iastHtml}
       <div class="card-divider"></div>
       <div class="shloka-translation">${translationHtml}</div>
       <div class="card-footer">
@@ -2253,6 +2272,31 @@ function renderResults(results, query) {
       </div>
     </article>`;
   }).join('');
+
+  if (append) {
+    grid.insertAdjacentHTML('beforeend', cardsHtml);
+  } else {
+    grid.innerHTML = cardsHtml;
+  }
+
+  if (results.length > visibleCount) {
+    const remaining = results.length - visibleCount;
+    const loadMoreContainer = document.createElement('div');
+    loadMoreContainer.id = 'loadMoreContainer';
+    loadMoreContainer.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 32px 0 16px;';
+    loadMoreContainer.innerHTML = `
+      <button class="filter-btn active" style="padding: 12px 32px; font-size: 14px; cursor: pointer; border-radius: 100px; box-shadow: 0 4px 20px rgba(212,160,60,0.25);" onclick="loadMoreResults()">
+        Load More Shlokas (${remaining} remaining) ↓
+      </button>
+    `;
+    grid.appendChild(loadMoreContainer);
+  }
+}
+
+function loadMoreResults() {
+  visibleCount += 30;
+  const q = document.getElementById('searchInput').value.trim();
+  renderResults(currentResults, q, true);
 }
 
 /* ════════════════════════════════════════
