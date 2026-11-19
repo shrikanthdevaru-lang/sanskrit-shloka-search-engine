@@ -118,3 +118,12 @@ MIT License — see [LICENSE](LICENSE) for details.
 **ॐ शान्तिः शान्तिः शान्तिः**
 
 </div>
+
+
+---
+
+## 👨‍💻 Creator & Copyright
+
+- **Developed By:** Shrikanth Bandi
+- **Copyright:** © 2026 Shrikanth Bandi. All rights reserved.
+- **Repository:** [sanskrit-shloka-search-engine](https://github.com/shrikanthdevaru-lang/sanskrit-shloka-search-engine)
