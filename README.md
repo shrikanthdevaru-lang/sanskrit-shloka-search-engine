@@ -1,8 +1,9 @@
-# 🕉️ Sanskrit Shloka Finder
+# 🕉️ Sanskrit Shloka Finder & Vedanta AI Agent
 
-> **Search thousands of Sanskrit shlokas from all major scriptures — Bhagavad Gita, Ramayana, Mahabharata, Upanishads, Vedas, Chanakya Niti — instantly, by typing a single word.**
+> **Search 170+ authentic Sanskrit shlokas from all major scriptures — Bhagavad Gita, Valmiki Ramayana, Mahabharata, Upanishads, Vedas, Chanakya Niti, Yoga Sutras, Subhashitani & Stotras — instantly, with full Devanagari, IAST transliteration, English translation, and conversational Vedanta AI guide.**
 
 [![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-Sanskrit%20Shloka%20Finder-gold?style=for-the-badge)](https://shrikanthdevaru-lang.github.io/sanskrit-shloka-search-engine/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/shrikanthdevaru-lang/sanskrit-shloka-search-engine)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green?style=for-the-badge)](https://pages.github.com/)
 
@@ -12,139 +13,78 @@
 
 | Feature | Description |
 |---|---|
-| ⚡ **Instant Search** | Results appear as you type — no submit needed |
-| 🔤 **Multi-Script** | Search in Sanskrit (Devanagari), IAST transliteration, or English |
-| 📚 **12+ Scriptures** | Bhagavad Gita, Ramayana, Mahabharata, Upanishads, Rig/Yajur/Atharva Veda, Chanakya Niti, and more |
-| 📍 **Full Source** | Every shloka shows Scripture name + Chapter + Verse reference |
-| 🎯 **Topic Browse** | Browse by Dharma, Karma, Bhakti, Jnana, Shanti, Yoga, etc. |
-| 🌅 **Daily Shloka** | A different shloka featured every day |
-| 📋 **Copy & Share** | One-click copy or share any shloka |
-| 📱 **Responsive** | Works beautifully on mobile, tablet, and desktop |
-| 🌙 **Dark Theme** | Premium deep-space dark UI with gold Devanagari aesthetics |
+| ⚡ **Instant Search** | Results update in real-time as you type — single letter or whole word |
+| 🔤 **Tri-Lingual / Multi-Script** | Search in Sanskrit (Devanagari `अर्जुन`), IAST transliteration (`dharma`), or English (`peace`) |
+| 📚 **170+ Hand-Curated Shlokas** | Extensive collection spanning 7 major scriptural traditions |
+| 📍 **Full Scholarly Attribution** | Scripture name, parva/kanda/chapter, verse number, and thematic tags |
+| 🤖 **Vedanta AI Agent** | Built-in conversational AI guide providing philosophical explanations and emotional comfort |
+| 🎯 **12 Thematic Topics** | One-click browsing by Dharma, Karma, Bhakti, Jnana, Shanti, Atman, Moksha, Guru, Maya, Brahman, Yoga, Prema |
+| 🌅 **Dynamic Daily Shloka** | Date-based rotating feature verse with one-click next shuffle |
+| 📋 **Copy & Web Share** | One-click copy with formatted Sanskrit + English, or native mobile share |
+| 🌙 **Cosmic Dark Theme** | Polished UI featuring Noto Sans Devanagari, Cormorant Garamond, and canvas particles |
+| 🚀 **Zero Dependencies** | Pure HTML5, modern CSS3, and vanilla JavaScript — hosted on GitHub Pages |
 
 ---
 
-## 🔍 How to Use
+## 📖 Scriptures & Corpus Overview
 
-1. **Type any word** in the search box — Sanskrit, IAST, or English
-   - Example: `dharma`, `karma`, `अर्जुन`, `peace`, `light`, `tat tvam`
-2. **Filter by scripture** using the tabs below the search bar
-3. **Browse topics** like Karma, Bhakti, Yoga by scrolling down
-4. **Copy or Share** any shloka using the action buttons on each card
-
----
-
-## 📖 Scriptures Included
-
-| Scripture | Shlokas | Language |
+| Tradition | Key Highlights Included | Shloka Count |
 |---|---|---|
-| Bhagavad Gita | 700 (all chapters) | Sanskrit + English |
-| Valmiki Ramayana | Selected | Sanskrit + English |
-| Mahabharata | Selected | Sanskrit + English |
-| Brihadaranyaka Upanishad | Key verses | Sanskrit + English |
-| Chandogya Upanishad | Key verses | Sanskrit + English |
-| Mandukya Upanishad | All verses | Sanskrit + English |
-| Katha Upanishad | Key verses | Sanskrit + English |
-| Isha Upanishad | Key verses | Sanskrit + English |
-| Mundaka Upanishad | Key verses | Sanskrit + English |
-| Rig Veda | Selected hymns | Sanskrit + English |
-| Yajur Veda | Selected | Sanskrit + English |
-| Atharva Veda | Selected | Sanskrit + English |
-| Chanakya Niti | Selected | Sanskrit + English |
-| Yoga Sutras of Patanjali | Selected | Sanskrit + English |
-| Hitopadesha | Selected | Sanskrit + English |
-| Vishnu Sahasranama | Selected | Sanskrit + English |
+| **Bhagavad Gita** | Verses from Ch 1 through 18 (*Karmanye Vadhikaraste*, *Yada Yada Hi Dharmasya*, *Sthitaprajna*, *Kalo'smi Loka-kshaya-krit*, *Sarva-dharman Parityajya*, *Yat Karoshi*, *Aham Sarvasya Prabhavo*, etc.) | 54 verses |
+| **Upanishads** | *Maha Upanishad* (Vasudhaiva Kutumbakam), *Isha* (1, 6, Purnamadah), *Kena*, *Katha* (Uttishthata Jagrata, Anor Aniyan, Na Tatra Suryo Bhati), *Mundaka* (Satyameva Jayate, Dva Suparna), *Mandukya*, *Taittiriya* (Satyam Vada, Matridevo Bhava, Raso Vai Sah), *Chandogya* (Tat Tvam Asi, Ekam Evadvitiyam), *Brihadaranyaka* (Asato Ma Sadgamaya, Aham Brahmasmi), *Shvetashvatara* | 29 verses |
+| **Vedas** | *Rig Veda* (Gayatri Mantra, Mahamrityunjaya Mantra, Nasadiya Sukta, Purusha Sukta, Samjnana Sukta, A No Bhadrah), *Yajur Veda* (Sri Rudram, Dyauh Shantih, Mitrasyaham Cakshusha), *Sama Veda*, *Atharva Veda* (Bhumi Sukta) | 13 hymns/mantras |
+| **Valmiki Ramayana** | *Bala Kanda* (Ma Nishada, Kausalya Supraja Rama), *Ayodhya Kanda* (Ramo Vigrahavan Dharmah), *Kishkindha Kanda* (Hanuman's Vedic mastery), *Sundara Kanda*, *Yuddha Kanda* (Janani Janmabhumishcha, Aditya Hridaya Stotra) | 12 verses |
+| **Mahabharata** | *Shanti Parva* (Dharmo Rakshati Rakshitah, Nasti Satyat Paro Dharmo), *Udyoga Parva* (Ahimsa Paramo Dharmah), *Vana Parva* (Yaksha Prashna — Kim Ashcharyam), *Adi Parva* (Yad Ihasti Tad Anyatra) | 13 verses |
+| **Chanakya Niti** | Maxims on education, friendship, focus of a lion, three jewels of earth, character testing, excess to be avoided, governance | 14 verses |
+| **Subhashita & Stotras** | Patanjali Yoga Sutras (1.1, 1.2, 1.3, 1.12, 1.33, 2.29, 2.46), Kalidasa (*Raghuvamsha*, *Kumarasambhava*), Hitopadesha (*Udyamena Hi Sidhyanti*), Panchatantra, Bhartrihari (*Niti* & *Vairagya Shataka*), Adi Shankaracharya (*Nirvana Shatakam*, *Bhaja Govindam*, *Dakshinamurti Stotram*, *Soundarya Lahari*), Guru Stotram, Ganesha Vandana, Karpura Gauram, Hanuman Stuti, Mahalakshmi Ashtakam | 40 verses |
+
+**Total Database Size: 174 carefully verified shlokas**
 
 ---
 
-## 🚀 Quick Start (Local)
+## 🔍 Sample Searches to Try
 
-No server or build step required! Simply open the HTML file:
+| Query | Script | What It Demonstrates |
+|---|---|---|
+| `dharma` | English | Matches *Bhagavad Gita*, *Ramayana*, *Mahabharata*, and *Upanishadic* verses on duty and righteousness |
+| `karma` | English | Matches *Gita 2.47*, *Gita 3.9*, *Gita 3.27*, *Gita 4.14*, and ethical principles of action |
+| `vasudhaiva` | IAST / English | Matches *Maha Upanishad / Hitopadesha 6.71* (*Vasudhaiva Kutumbakam* — The whole world is one family) |
+| `satyameva` | IAST / English | Matches *Mundaka Upanishad 3.1.6* (*Satyameva Jayate* — National motto of India) |
+| `sarve bhavantu` | IAST / English | Universal peace prayer (*Sarve Bhavantu Sukhinah Sarve Santu Niramayah*) |
+| `janani` | IAST / English | Matches *Valmiki Ramayana* (*Janani Janmabhumish ca svargad api gariyasi*) |
+| `nirvana` | English | Matches Adi Shankaracharya's *Nirvana Shatakam* (*Mano-buddhy-ahankara... Chidanandarupah Shivoham Shivoham*) |
+| `guru` | English / IAST | Matches *Guru Stotram* (*Gurur Brahma Gurur Vishnuh*), *Akhanda Mandalakaram*, and *Gita 4.34* |
+| `ganesha` | English | Matches *Vakratunda Mahakaya Suryakoti Samaprabha* |
+| `sthitaprajna` | IAST | Matches *Bhagavad Gita 2.55* (Definition of a person of steady wisdom) |
+| `अर्जुन` | Devanagari | Live Devanagari script matching across all Krishna-Arjuna dialogues |
+| `कृष्ण` | Devanagari | Matches Gita verses with Krishna/Vasudeva/Bhagavan keywords |
+| `शान्ति` | Devanagari | Matches Vedic and Upanishadic peace mantras |
+
+---
+
+## 🤖 Vedanta AI Agent
+
+Click the floating **🕉️ AI** button in the bottom-right corner to interact with the conversational assistant:
+- **Emotional Resonance**: Express feeling sad, anxious, or unmotivated, and receive tailored shlokas with compassionate explanations.
+- **Philosophical Explanations**: Ask *"What is Karma?"*, *"Explain Dharma"*, or *"What is Brahman?"* for structured summaries with scriptural references.
+- **Scripture Overviews**: Inquire about the Bhagavad Gita, Upanishads, Vedas, Ramayana, or Chanakya Niti.
+- **Interactive Shloka Cards**: View, copy, or jump directly to relevant shlokas in the main search interface.
+
+---
+
+## 🚀 Quick Start (Local Run)
+
+No package manager, node server, or build step required! Simply clone and open:
 
 ```bash
-git clone https://github.com/shrikanthdevaru-lang/dr-saroj-kumar-padhi-portfolio.git
-cd dr-saroj-kumar-padhi-portfolio
-open index.html   # Mac
+git clone https://github.com/shrikanthdevaru-lang/sanskrit-shloka-search-engine.git
+cd sanskrit-shloka-search-engine
+open index.html      # macOS
 # or
-start index.html  # Windows
+start index.html     # Windows
 # or
 xdg-open index.html  # Linux
 ```
-
----
-
-## 🌐 Deploy to GitHub Pages
-
-1. Go to your repository **Settings**
-2. Click **Pages** in the left sidebar
-3. Under **Source**, select **Deploy from a branch**
-4. Choose **`main`** branch and **`/ (root)`** folder
-5. Click **Save**
-6. Your site will be live at `https://YOUR_USERNAME.github.io/REPO_NAME/`
-
----
-
-## 🛠️ Tech Stack
-
-- **Pure HTML5 + CSS3 + Vanilla JavaScript** — zero dependencies
-- **Google Fonts**: Noto Sans Devanagari, Cormorant Garamond, Space Mono, Inter
-- **Canvas API**: Particle animation with floating Sanskrit characters
-- **No backend required**: All shlokas are embedded as JSON in the HTML
-- **GitHub Pages compatible**: Static site, no server needed
-
----
-
-## 📊 Search Algorithm
-
-The search engine scores results across multiple fields:
-
-```
-Score = Sanskrit match (3pts) + IAST match (2pts) + Translation match (1pt)
-```
-
-- **Sanskrit (Devanagari)**: Direct substring match with highest priority
-- **IAST transliteration**: Romanized Sanskrit match
-- **English translation**: Word/phrase match in the translation
-- **Keywords**: Pre-tagged semantic keywords for each shloka
-- **Tags**: Topic tags (dharma, karma, yoga, etc.)
-
----
-
-## 📁 Project Structure
-
-```
-sanskrit-shloka-search-engine/
-├── index.html          ← Complete app (all-in-one)
-├── hero-bg.png         ← Hero background image (AI generated)
-├── README.md           ← This file
-└── .github/
-    └── workflows/
-        └── deploy.yml  ← GitHub Pages auto-deploy
-```
-
----
-
-## 🙏 Data Sources & Attribution
-
-Shloka data is compiled from public domain and openly licensed sources:
-- **GRETIL** (Göttingen Register of Electronic Texts in Indian Languages)
-- **Sacred-texts.com** (Public domain translations)
-- **DharmicData** (GitHub, MIT License)
-- **SanskritSahitya.org** (Open access)
-- **Traditional scholarly editions**
-
-All Sanskrit texts are in the public domain. English translations are adapted from public domain translations by scholars such as Swami Prabhupada (for Bhagavad Gita), Ralph T.H. Griffith (for Vedas), and others.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! To add more shlokas:
-
-1. Fork the repository
-2. Add shlokas to the `SHLOKAS` array in `index.html`
-3. Follow the schema: `{ id, source, scripture, ref, tags, sanskrit, iast, translation, keywords }`
-4. Submit a pull request
 
 ---
 
@@ -156,9 +96,9 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-**ॐ सर्वे भवन्तु सुखिनः। सर्वे सन्तु निरामयाः।**
-*May all beings be happy. May all beings be free from illness.*
+**ॐ असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय॥**  
+*Lead us from the unreal to the real. Lead us from darkness to light. Lead us from death to immortality.*
 
-Made with 🙏 for the preservation of Sanskrit wisdom
+**ॐ शान्तिः शान्तिः शान्तिः**
 
 </div>
